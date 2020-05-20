@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using static GenericTree.Presets.Octree.OverlapType;
 
 namespace GenericTree.Presets
 {
@@ -10,12 +11,12 @@ namespace GenericTree.Presets
 
         public List<ILeaf<Vector3>> SearchByBox(Vector3 center, Vector3 size)
         {
-            return Search(new Box(center, size), Overlaps.BoxOverlap);
+            return Search(new Box(center, size), OverlapTest.BoxOverlap);
         }
 
         public List<ILeaf<Vector3>> SearchBySphere(Vector3 center, float radius)
         {
-            return Search(new Sphere(center, radius), Overlaps.SphereOverlap);
+            return Search(new Sphere(center, radius), OverlapTest.SphereOverlap);
         }
 
 
@@ -38,7 +39,7 @@ namespace GenericTree.Presets
         }
 
         //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
-        public class Overlaps
+        public static class OverlapTest
         {
             public static bool PointOverlap(Vector3 point, Volume<Vector3> volume)
             {
@@ -66,6 +67,33 @@ namespace GenericTree.Presets
                 var distanceSqr = Vector3.DistanceSquared(nearest, sphere.center);
 
                 return distanceSqr < sphere.radius * sphere.radius;
+            }
+        }
+
+        public static class OverlapType
+        {
+            public struct Box
+            {
+                public Vector3 center;
+                public Vector3 size;
+
+                public Box(Vector3 center, Vector3 size)
+                {
+                    this.center = center;
+                    this.size = size;
+                }
+            }
+
+            public struct Sphere
+            {
+                public Vector3 center;
+                public float radius;
+
+                public Sphere(Vector3 center, float radius)
+                {
+                    this.center = center;
+                    this.radius = radius;
+                }
             }
         }
     }

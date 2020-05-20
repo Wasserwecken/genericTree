@@ -5,10 +5,7 @@ namespace GenericTree.Presets
 {
     public class GenericTree : Tree<GVector>
     {
-        public GenericTree(TreeSettings<GVector> settings) : base(settings, SplitVolume)
-        {
-
-        }
+        public GenericTree(TreeSettings<GVector> settings) : base(settings, SplitVolume) { }
 
         private static Volume<GVector>[] SplitVolume(Volume<GVector> volume)
         {
@@ -21,10 +18,7 @@ namespace GenericTree.Presets
             var splits = new Volume<GVector>[splitCount];
             for(int s = 1; s <= splitCount; s++)
             {
-                var offsetVector = new GVector(dimensions);
-                for (int a = 0; a < dimensions; a++)
-                    offsetVector[a] = s % (int)Math.Pow(2, a) > 0 ? offset : -offset;
-
+                var offsetVector = new GVector(dimensions).ForEachAxis((i, axis) => s % (int)Math.Pow(2, i) > 0 ? offset : -offset);
                 splits[s] = new Volume<GVector>(volume.center + offsetVector[s], splitSize);
             }
 
