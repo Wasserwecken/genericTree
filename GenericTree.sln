@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericTree", "GenericTree\GenericTree.csproj", "{41A6AAC7-B787-4516-82A4-2A6FAFD3119E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericVector", "genericVector\GenericVector\GenericVector.csproj", "{7551962E-2B65-445A-BC6F-A5724A321B8A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{41A6AAC7-B787-4516-82A4-2A6FAFD3119E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41A6AAC7-B787-4516-82A4-2A6FAFD3119E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41A6AAC7-B787-4516-82A4-2A6FAFD3119E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7551962E-2B65-445A-BC6F-A5724A321B8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7551962E-2B65-445A-BC6F-A5724A321B8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7551962E-2B65-445A-BC6F-A5724A321B8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7551962E-2B65-445A-BC6F-A5724A321B8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
