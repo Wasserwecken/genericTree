@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace GenericTree
 {
     [DebuggerDisplay("Level: {Level};")]
-    public class Node<T>
+    internal class Node<T>
     {
         public int Level { get; private set; }
         public Volume<T> NodeVolume { get; private set; }
@@ -16,13 +16,13 @@ namespace GenericTree
         private bool HasChildren => childNodes.Count > 0;
 
 
-        internal Node()
+        public Node()
         {
             childNodes = new List<Node<T>>();
             leafs = new List<ILeaf<T>>();
         }
 
-        internal Node<T> Context(
+        public Node<T> Context(
             Tree<T> tree,
             Volume<T> nodeVolume,
             int level)
@@ -37,7 +37,7 @@ namespace GenericTree
             return this;
         }
 
-        internal Node<T> Reset()
+        public Node<T> Reset()
         {
             tree = null;
             childNodes.Clear();
@@ -46,7 +46,7 @@ namespace GenericTree
             return this;
         }
 
-        internal bool Add(ILeaf<T> leaf)
+        public bool Add(ILeaf<T> leaf)
         {
             if (leaf.CheckOverlap(NodeVolume))
             {
@@ -67,7 +67,7 @@ namespace GenericTree
                 return false;
         }
 
-        internal bool Remove(ILeaf<T> leaf)
+        public bool Remove(ILeaf<T> leaf)
         {
             if(leaf.CheckOverlap(NodeVolume))
             {
@@ -83,7 +83,15 @@ namespace GenericTree
             return false;
         }
 
-        internal void Find<TSearchType>(TSearchType searchType, List<ILeaf<T>> leafList, Func<TSearchType, Volume<T>, bool> overlap)
+        public void ProvideVolumes(ICollection<Volume<T>> result)
+        {
+            result.Add(NodeVolume);
+
+            foreach (var child in childNodes)
+                child.ProvideVolumes(result);
+        }
+
+        public void Find<TSearchType>(TSearchType searchType, List<ILeaf<T>> leafList, Func<TSearchType, Volume<T>, bool> overlap)
         {
             if(overlap(searchType, NodeVolume))
             {

@@ -6,12 +6,10 @@ namespace GenericTree
     public class Tree<T>
     {
         internal readonly TreeSettings<T> settings;
-        private readonly Stack<Node<T>> unusedNodes;
-
         internal readonly Func<Volume<T>, Volume<T>[]> splitVolume;
-        
-        private readonly Node<T> rootNode;
 
+        private readonly Stack<Node<T>> unusedNodes;
+        private readonly Node<T> rootNode;
 
         public Tree(
             TreeSettings<T> settings,
@@ -33,6 +31,13 @@ namespace GenericTree
             return rootNode.Remove(leaf);
         }
 
+        public List<Volume<T>> ProvideVolumes()
+        {
+            var result = new List<Volume<T>>();
+            rootNode.ProvideVolumes(result);
+            return result;
+        }
+
         public List<ILeaf<T>> Search<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> overlap)
         {
             var result = new List<ILeaf<T>>();
@@ -51,7 +56,7 @@ namespace GenericTree
 
         internal void ReturnNodes(List<Node<T>> nodes)
         {
-            foreach(var node in nodes)
+            foreach (var node in nodes)
                 unusedNodes.Push(node.Reset());
         }
     }
