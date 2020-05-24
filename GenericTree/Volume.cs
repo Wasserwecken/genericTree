@@ -2,12 +2,12 @@
 {
     public struct Volume<T>
     {
-        public T center;
+        public T origin;
         public T size;
 
-        public Volume(T center, T size)
+        public Volume(T origin, T size)
         {
-            this.center = center;
+            this.origin = origin;
             this.size = size;
         }
     }
