@@ -15,10 +15,10 @@ This projekt is a private case study about abstracting the quad and octree proce
 
 
 ## Preset usage
-The example uses the octree preset. Nevertheless the API and behaviour will exactly the same for the quadtree.   
+The example uses the octree preset. Nevertheless the API and behaviour is exactly the same for the quadtree.   
 
 
-### Initialisation of a tree structure
+### Initialisation
 ```c#
 // defines the area of the tree
 var startVolume = new Volume<Vector3>(
@@ -32,7 +32,7 @@ var tree = new Octree(startVolume, 10, 4);
 The instance of the tree is used to interact with the structure and the containing leafs. The leaf itself will have no influence or knowledge about the structure.
 
 
-### Defining leafs
+### Leafs
 To add an item to the tree structure, it needs to be marked as a leaf by implementing the interface `ILeaf<T>` where `T` is the type of the position data. In case of the octree preset `T` has to be `Vector3`.
 
 ```c#
@@ -74,7 +74,7 @@ class BoxItem : ILeaf<Vector3>
 If there is a need for a custom bounding shape, only the intersection code has to be written for it. `Volume<T>` is always a AABB Box.
 
 
-### Working with the tree
+### Tree interaction
 
 #### Add
 ```c#
@@ -143,3 +143,30 @@ public bool RayBoxIntersection(Ray ray, Volume<Vector3> volume)
     return true;
 }
 ```
+
+## Custom tree
+For custom types other than `System.Numerics.Vector2`, `System.Numerics.Vector3` or a higher dimensional vector, the generic `Tree<T>` class have to be used.
+
+```c#
+public void TreeInit()
+{
+    var startVolume = new Volume<Vector4>(
+            Vector4.Zero,
+            Vector4.One * 10f
+        );
+    var tree4D = new Tree<Vector4>(startVolume, 10, 4, SplitVolume);
+}
+
+// this method is called by the tree if the internal structure have to grow
+public Volume<Vector4>[] SplitVolume(Volume<Vector4> volume)
+{
+    // create new subvolumes based of the given volume
+    // ...
+
+    return newVolumes
+}
+```
+
+THe initialisation of a custom tree is quite the same as using a preset. The generic tree only needs a additional method for splitting volumes. The method is called when a node of the tree contains more leafs than allowed and the maximum depth is not reached. All other functions are used like with the presets, except the search.
+
+For the searching in the generic tree, only the generic search is available (see: Search). I recommend to create a extra class for custom trees which extends the `Tree<T>` (see: octree preset implelemtation source).
