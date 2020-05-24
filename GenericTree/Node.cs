@@ -65,7 +65,7 @@ namespace GenericTree
                     leafCount = leafs.Count;
 
                     if (leafs.Count > tree.settings.maxNodeLeafs
-                        && NodeVolume.size > tree.settings.minVolumeSize * 2.0)
+                        && Level < tree.settings.maxDepth)
                         Split();
                 }
 

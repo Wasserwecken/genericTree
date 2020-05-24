@@ -3,9 +3,9 @@
     public struct Volume<T>
     {
         public T center;
-        public float size;
+        public T size;
 
-        public Volume(T center, float size)
+        public Volume(T center, T size)
         {
             this.center = center;
             this.size = size;

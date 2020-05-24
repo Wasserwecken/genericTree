@@ -32,14 +32,14 @@ namespace GenericTree.Presets
 
             return new Volume<Vector3>[8]
             {
-                new Volume<Vector3>(volume.center + new Vector3(offset, offset, -offset), splitSize),
-                new Volume<Vector3>(volume.center + new Vector3(offset, offset, offset), splitSize),
-                new Volume<Vector3>(volume.center + new Vector3(offset, -offset, -offset), splitSize),
-                new Volume<Vector3>(volume.center + new Vector3(offset, -offset, offset), splitSize),
-                new Volume<Vector3>(volume.center + new Vector3(-offset, offset, -offset), splitSize),
-                new Volume<Vector3>(volume.center + new Vector3(-offset, offset, offset), splitSize),
-                new Volume<Vector3>(volume.center + new Vector3(-offset, -offset, -offset), splitSize),
-                new Volume<Vector3>(volume.center + new Vector3(-offset, -offset, offset), splitSize)
+                new Volume<Vector3>(volume.center + offset * new Vector3(1, 1, -1), splitSize),
+                new Volume<Vector3>(volume.center + offset * new Vector3(1, 1, 1), splitSize),
+                new Volume<Vector3>(volume.center + offset * new Vector3(1, -1, -1), splitSize),
+                new Volume<Vector3>(volume.center + offset * new Vector3(1, -1, 1), splitSize),
+                new Volume<Vector3>(volume.center + offset * new Vector3(-1, 1, -1), splitSize),
+                new Volume<Vector3>(volume.center + offset * new Vector3(-1, 1, 1), splitSize),
+                new Volume<Vector3>(volume.center + offset * new Vector3(-1, -1, -1), splitSize),
+                new Volume<Vector3>(volume.center + offset * new Vector3(-1, -1, 1), splitSize)
             };
         }
 
@@ -49,9 +49,9 @@ namespace GenericTree.Presets
             public static bool PointOverlap(Vector3 point, Volume<Vector3> volume)
             {
                 var delta = volume.size / 2f;
-                return !(point.X < volume.center.X - delta) && !(point.X > volume.center.X + delta) &&
-                       !(point.Y < volume.center.Y - delta) && !(point.Y > volume.center.Y + delta) &&
-                       !(point.Z < volume.center.Z - delta) && !(point.Z > volume.center.Z + delta)
+                return !(point.X < volume.center.X - delta.X) && !(point.X > volume.center.X + delta.X) &&
+                       !(point.Y < volume.center.Y - delta.Y) && !(point.Y > volume.center.Y + delta.Y) &&
+                       !(point.Z < volume.center.Z - delta.Z) && !(point.Z > volume.center.Z + delta.Z)
                     ;
             }
 
@@ -59,15 +59,15 @@ namespace GenericTree.Presets
             {
                 var boxDelta = box.size / 2f;
                 var volumeDelta = volume.size / 2f;
-                return !(box.center.X + boxDelta.X < volume.center.X - volumeDelta) && !(box.center.X - boxDelta.X > volume.center.X + volumeDelta) &&
-                       !(box.center.Y + boxDelta.Y < volume.center.Y - volumeDelta) && !(box.center.Y - boxDelta.Y > volume.center.Y + volumeDelta) &&
-                       !(box.center.Z + boxDelta.Z < volume.center.Z - volumeDelta) && !(box.center.Z - boxDelta.Z > volume.center.Z + volumeDelta)
+                return !(box.center.X + boxDelta.X < volume.center.X - volumeDelta.X) && !(box.center.X - boxDelta.X > volume.center.X + volumeDelta.X) &&
+                       !(box.center.Y + boxDelta.Y < volume.center.Y - volumeDelta.Y) && !(box.center.Y - boxDelta.Y > volume.center.Y + volumeDelta.Y) &&
+                       !(box.center.Z + boxDelta.Z < volume.center.Z - volumeDelta.Z) && !(box.center.Z - boxDelta.Z > volume.center.Z + volumeDelta.Z)
                     ;
             }
 
             public static bool SphereOverlap(Sphere sphere, Volume<Vector3> volume)
             {
-                var volumeDelta = new Vector3(volume.size / 2f);
+                var volumeDelta = volume.size / 2f;
                 var nearest = Vector3.Max(volume.center - volumeDelta, Vector3.Min(volume.center + volumeDelta, sphere.center));
                 var distanceSqr = Vector3.DistanceSquared(nearest, sphere.center);
 
