@@ -50,37 +50,35 @@ namespace GenericTree
 
         public bool Add(ILeaf<T> leaf)
         {
+            var success = false;
+            
             if (leaf.CheckOverlap(NodeVolume))
             {
-                var success = false;
-
                 if (childNodes.Count > 0)
                 {
-                    success |= AddToChildren(leaf);
+                    success = AddToChildren(leaf);
                     if (success) leafCount++;
                 }
                 else
                 {
-                    leafs.Add(leaf);
+                    success = leafs.Add(leaf);
                     leafCount = leafs.Count;
 
                     if (leafs.Count > tree.settings.maxNodeLeafs
                         && Level < tree.settings.maxDepth)
                         Split();
                 }
-
-                return success;
             }
 
-            return false;
+            return success;
         }
 
         public bool Remove(ILeaf<T> leaf)
         {
+            var success = false;
+            
             if (leaf.CheckOverlap(NodeVolume))
             {
-                var success = false;
-
                 if (childNodes.Count > 0)
                 {
                     foreach (var child in childNodes)
@@ -92,11 +90,9 @@ namespace GenericTree
                     success = leafs.Remove(leaf);
                     leafCount = leafs.Count;
                 }
-
-                return success;
             }
 
-            return false;
+            return success;
         }
 
         public void ProvideVolumes(List<Volume<T>> result)
