@@ -29,8 +29,7 @@ namespace GenericTree
         public bool Remove(ILeaf<T> leaf)
         {
             var result = rootNode.Remove(leaf);
-            //if (result)
-            rootNode.TryMerge();
+            if (result) rootNode.TryMerge();
             return result;
         }
 
