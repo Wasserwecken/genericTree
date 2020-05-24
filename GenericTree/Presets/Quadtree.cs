@@ -6,8 +6,9 @@ namespace GenericTree.Presets
 {
     public class Quadtree : Tree<Vector2>
     {
-        public Quadtree(TreeSettings<Vector2> settings) : base(settings, SplitVolume) { }
-
+        public Quadtree(Volume<Vector2> startVolume, int maxDepth, int maxLeafsPerNode)
+            : base(startVolume, maxDepth, maxLeafsPerNode, SplitVolume)
+        { }
 
         public HashSet<ILeaf<Vector2>> SearchByPoint(Vector2 point)
         {

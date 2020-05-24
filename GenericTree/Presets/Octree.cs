@@ -6,7 +6,9 @@ namespace GenericTree.Presets
 {
     public class Octree : Tree<Vector3>
     {
-        public Octree(TreeSettings<Vector3> settings) : base(settings, SplitVolume) { }
+        public Octree(Volume<Vector3> startVolume, int maxDepth, int maxLeafsPerNode)
+            : base(startVolume, maxDepth, maxLeafsPerNode, SplitVolume)
+        { }
 
 
         public HashSet<ILeaf<Vector3>> SearchByPoint(Vector3 point)
