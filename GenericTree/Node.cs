@@ -62,8 +62,8 @@ namespace GenericTree
                     success = leafs.Add(leaf);
                     leafCount = leafs.Count;
 
-                    if (leafs.Count > tree.settings.maxNodeLeafs
-                        && depth < tree.settings.maxDepth)
+                    if (leafs.Count > tree.maxLeafsPerNode
+                        && depth < tree.maxDepth)
                         Split();
                 }
             }
@@ -119,7 +119,7 @@ namespace GenericTree
         {
             if (childNodes.Count > 0)
             {
-                if (leafCount <= tree.settings.maxNodeLeafs)
+                if (leafCount <= tree.maxLeafsPerNode)
                 {
                     foreach (var child in childNodes)
                         child.Disolve(leafs);

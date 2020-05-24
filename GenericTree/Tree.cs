@@ -5,20 +5,25 @@ namespace GenericTree
 {
     public class Tree<T>
     {
-        internal readonly TreeSettings<T> settings;
+        internal readonly int maxDepth;
+        internal readonly int maxLeafsPerNode;
         internal readonly Func<Volume<T>, Volume<T>[]> splitVolume;
-
+        
         private readonly Stack<Node<T>> unusedNodes;
         private readonly Node<T> rootNode;
 
         public Tree(
-            TreeSettings<T> settings,
+            Volume<T> startVolume,
+            int maxDepth,
+            int maxLeafsPerNode,
             Func<Volume<T>, Volume<T>[]> splitVolume)
         {
-            this.settings = settings;
+            this.maxDepth = maxDepth;
+            this.maxLeafsPerNode = maxLeafsPerNode;
             this.splitVolume = splitVolume;
+
             unusedNodes = new Stack<Node<T>>();
-            rootNode = ProvideNode().Context(this, settings.volume, 0);
+            rootNode = ProvideNode().Context(this, startVolume, 0);
         }
 
         public bool Add(ILeaf<T> leaf)
