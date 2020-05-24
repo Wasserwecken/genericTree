@@ -42,15 +42,15 @@ class Item : ILeaf<Vector3>
     private Vector3 position;
 
     // method from the interface
-    public bool CheckOverlap(Volume<Vector3> volume)
+    public bool IntersectionCheck(Volume<Vector3> volume)
     {
         // intersection test from the octree preset can be used
-        return Octree.OverlapTest.PointOverlap(position, volume);
+        return Octree.IntersectionTest.PointBox(position, volume);
     }
 }
 ```
 
-The method `bool CheckOverlap(Volume<Vector3> volume)` is called by the tree when the structure is change (usually this will happen on Add or Remove). With this method, the tree will determine how to build and where an element is located in the structure.
+The method `bool IntersectionCheck(Volume<Vector3> volume)` is called by the tree when the structure is change (usually this will happen on Add or Remove). With this method, the tree will determine how to build and where an element is located in the structure.
 
 Due to outsourcing the intersection test to the leaf, the user can dicide which bouding shape a leaf implements. The example above used a point as bouding shape. Following example will implement a item with a box as bounding shape:
 
@@ -62,11 +62,11 @@ class BoxItem : ILeaf<Vector3>
     private Vector3 size;
 
     // method from the interface
-    public bool CheckOverlap(Volume<Vector3> volume)
+    public bool IntersectionCheck(Volume<Vector3> volume)
     {
         // intersection test from the octree preset can be used
-        var box = new Octree.OverlapType.Box(position, size);
-        return Octree.OverlapTest.BoxOverlap(box, volume);
+        var box = new Octree.IntersectionType.Box(position, size);
+        return Octree.IntersectionTest.BoxBox(box, volume);
     }
 }
 ```
