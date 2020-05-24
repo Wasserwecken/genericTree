@@ -1,5 +1,5 @@
 # genericTree
-This projekt is a private case study about abstracting the quad and octree process, to enable a generic leaf bounding boxes and a dimensional and position type lose implementation.
+This project is a private case study about abstracting the quad and octree process, to enable a generic leaf bounding boxes and a dimensional and position type lose implementation.
 
 
 ## Features
