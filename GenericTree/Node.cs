@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace GenericTree
 {
-    [DebuggerDisplay("Level: {Level}; Leafs: {leafCount}; HasChildren: {childNodes.Count > 0}")]
+    [DebuggerDisplay("Depth: {depth}; Leafs: {leafCount}; HasChildren: {childNodes.Count > 0}")]
     internal class Node<T>
     {
-        public int Level { get; private set; }
-        public Volume<T> NodeVolume { get; private set; }
-
+        private int depth;
+        private Volume<T> volume;
         private Tree<T> tree;
         private readonly HashSet<ILeaf<T>> leafs;
         private readonly List<Node<T>> childNodes;
@@ -25,12 +23,12 @@ namespace GenericTree
 
         public Node<T> Context(
             Tree<T> tree,
-            Volume<T> nodeVolume,
+            Volume<T> volume,
             int level)
         {
             this.tree = tree;
-            NodeVolume = nodeVolume;
-            Level = level;
+            this.volume = volume;
+            this.depth = level;
 
             childNodes.Clear();
             leafs.Clear();
@@ -52,7 +50,7 @@ namespace GenericTree
         {
             var success = false;
             
-            if (leaf.CheckOverlap(NodeVolume))
+            if (leaf.CheckOverlap(volume))
             {
                 if (childNodes.Count > 0)
                 {
@@ -65,7 +63,7 @@ namespace GenericTree
                     leafCount = leafs.Count;
 
                     if (leafs.Count > tree.settings.maxNodeLeafs
-                        && Level < tree.settings.maxDepth)
+                        && depth < tree.settings.maxDepth)
                         Split();
                 }
             }
@@ -77,7 +75,7 @@ namespace GenericTree
         {
             var success = false;
             
-            if (leaf.CheckOverlap(NodeVolume))
+            if (leaf.CheckOverlap(volume))
             {
                 if (childNodes.Count > 0)
                 {
@@ -97,7 +95,7 @@ namespace GenericTree
 
         public void ProvideVolumes(List<Volume<T>> result)
         {
-            result.Add(NodeVolume);
+            result.Add(volume);
 
             foreach (var child in childNodes)
                 child.ProvideVolumes(result);
@@ -105,7 +103,7 @@ namespace GenericTree
 
         public void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> overlap)
         {
-            if (overlap(searchType, NodeVolume))
+            if (overlap(searchType, volume))
             {
                 if (childNodes.Count > 0)
                     foreach (var child in childNodes)
@@ -147,9 +145,9 @@ namespace GenericTree
 
         private void Split()
         {
-            var childVolumes = tree.splitVolume(NodeVolume);
+            var childVolumes = tree.splitVolume(volume);
             foreach (var childVolume in childVolumes)
-                childNodes.Add(tree.ProvideNode().Context(tree, childVolume, Level + 1));
+                childNodes.Add(tree.ProvideNode().Context(tree, childVolume, depth + 1));
 
             foreach (var leaf in leafs)
                 AddToChildren(leaf);
