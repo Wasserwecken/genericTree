@@ -45,10 +45,10 @@ namespace GenericTree
             return result;
         }
 
-        public HashSet<ILeaf<T>> Search<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> overlap)
+        public HashSet<ILeaf<T>> Search<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> intersection)
         {
             var result = new HashSet<ILeaf<T>>();
-            rootNode.Find(searchType, result, overlap);
+            rootNode.Find(searchType, result, intersection);
             return result;
         }
 

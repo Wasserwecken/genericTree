@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
-using static GenericTree.Presets.Quadtree.OverlapType;
+using static GenericTree.Presets.Quadtree.IntersectionType;
 
 namespace GenericTree.Presets
 {
@@ -12,17 +12,17 @@ namespace GenericTree.Presets
 
         public HashSet<ILeaf<Vector2>> SearchByPoint(Vector2 point)
         {
-            return Search(point, OverlapTest.PointOverlap);
+            return Search(point, IntersectionTest.PointBox);
         }
 
         public HashSet<ILeaf<Vector2>> SearchByBox(Vector2 origin, Vector2 size)
         {
-            return Search(new Box(origin, size), OverlapTest.BoxOverlap);
+            return Search(new Box(origin, size), IntersectionTest.BoxBox);
         }
 
         public HashSet<ILeaf<Vector2>> SearchByCircle(Vector2 origin, float radius)
         {
-            return Search(new Sphere(origin, radius), OverlapTest.SphereOverlap);
+            return Search(new Sphere(origin, radius), IntersectionTest.SphereBox);
         }
 
 
@@ -41,9 +41,9 @@ namespace GenericTree.Presets
         }
 
         //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
-        public static class OverlapTest
+        public static class IntersectionTest
         {
-            public static bool PointOverlap(Vector2 point, Volume<Vector2> volume)
+            public static bool PointBox(Vector2 point, Volume<Vector2> volume)
             {
                 var delta = volume.size / 2f;
                 return !(point.X < volume.origin.X - delta.X) && !(point.X > volume.origin.X + delta.X) &&
@@ -51,7 +51,7 @@ namespace GenericTree.Presets
                     ;
             }
 
-            public static bool BoxOverlap(Box box, Volume<Vector2> volume)
+            public static bool BoxBox(Box box, Volume<Vector2> volume)
             {
                 var boxDelta = box.size / 2f;
                 var volumeDelta = volume.size / 2f;
@@ -60,7 +60,7 @@ namespace GenericTree.Presets
                     ;
             }
 
-            public static bool SphereOverlap(Sphere sphere, Volume<Vector2> volume)
+            public static bool SphereBox(Sphere sphere, Volume<Vector2> volume)
             {
                 var volumeDelta = volume.size / 2f;
                 var nearest = Vector2.Max(volume.origin - volumeDelta, Vector2.Min(volume.origin + volumeDelta, sphere.origin));
@@ -70,7 +70,7 @@ namespace GenericTree.Presets
             }
         }
 
-        public static class OverlapType
+        public static class IntersectionType
         {
             public struct Box
             {

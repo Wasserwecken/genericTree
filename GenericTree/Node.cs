@@ -50,7 +50,7 @@ namespace GenericTree
         {
             var success = false;
             
-            if (leaf.CheckOverlap(volume))
+            if (leaf.IntersectionCheck(volume))
             {
                 if (childNodes.Count > 0)
                 {
@@ -75,7 +75,7 @@ namespace GenericTree
         {
             var success = false;
             
-            if (leaf.CheckOverlap(volume))
+            if (leaf.IntersectionCheck(volume))
             {
                 if (childNodes.Count > 0)
                 {
@@ -101,13 +101,13 @@ namespace GenericTree
                 child.ProvideVolumes(result);
         }
 
-        public void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> overlap)
+        public void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionCheck)
         {
-            if (overlap(searchType, volume))
+            if (intersectionCheck(searchType, volume))
             {
                 if (childNodes.Count > 0)
                     foreach (var child in childNodes)
-                        child.Find(searchType, resultList, overlap);
+                        child.Find(searchType, resultList, intersectionCheck);
                 else
                     foreach (var leaf in leafs)
                         resultList.Add(leaf);

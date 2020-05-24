@@ -2,6 +2,6 @@
 {
     public interface ILeaf<T>
     {
-        bool CheckOverlap(Volume<T> volume);
+        bool IntersectionCheck(Volume<T> volume);
     }
 }
