@@ -18,7 +18,7 @@ namespace GenericTree
             this.settings = settings;
             this.splitVolume = splitVolume;
             unusedNodes = new Stack<Node<T>>();
-            rootNode = ProvideNode().Context(this, settings.volume, 1);
+            rootNode = ProvideNode().Context(this, settings.volume, 0);
         }
 
         public bool Add(ILeaf<T> leaf)
@@ -28,7 +28,10 @@ namespace GenericTree
 
         public bool Remove(ILeaf<T> leaf)
         {
-            return rootNode.Remove(leaf);
+            var result = rootNode.Remove(leaf);
+            //if (result)
+            rootNode.TryMerge();
+            return result;
         }
 
         public List<Volume<T>> ProvideVolumes()
@@ -38,9 +41,9 @@ namespace GenericTree
             return result;
         }
 
-        public List<ILeaf<T>> Search<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> overlap)
+        public HashSet<ILeaf<T>> Search<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> overlap)
         {
-            var result = new List<ILeaf<T>>();
+            var result = new HashSet<ILeaf<T>>();
             rootNode.Find(searchType, result, overlap);
             return result;
         }
@@ -58,6 +61,11 @@ namespace GenericTree
         {
             foreach (var node in nodes)
                 unusedNodes.Push(node.Reset());
+        }
+
+        internal void ReturnNode(Node<T> node)
+        {
+            unusedNodes.Push(node.Reset());
         }
     }
 }

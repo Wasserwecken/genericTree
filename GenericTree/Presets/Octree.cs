@@ -9,12 +9,17 @@ namespace GenericTree.Presets
         public Octree(TreeSettings<Vector3> settings) : base(settings, SplitVolume) { }
 
 
-        public List<ILeaf<Vector3>> SearchByBox(Vector3 center, Vector3 size)
+        public HashSet<ILeaf<Vector3>> SearchByPoint(Vector3 point)
+        {
+            return Search(point, OverlapTest.PointOverlap);
+        }
+
+        public HashSet<ILeaf<Vector3>> SearchByBox(Vector3 center, Vector3 size)
         {
             return Search(new Box(center, size), OverlapTest.BoxOverlap);
         }
 
-        public List<ILeaf<Vector3>> SearchBySphere(Vector3 center, float radius)
+        public HashSet<ILeaf<Vector3>> SearchBySphere(Vector3 center, float radius)
         {
             return Search(new Sphere(center, radius), OverlapTest.SphereOverlap);
         }
