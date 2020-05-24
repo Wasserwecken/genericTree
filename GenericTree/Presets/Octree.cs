@@ -61,17 +61,17 @@ namespace GenericTree.Presets
             {
                 var boxDelta = box.size / 2f;
                 var volumeDelta = volume.size / 2f;
-                return !(box.center.X + boxDelta.X < volume.origin.X - volumeDelta.X) && !(box.center.X - boxDelta.X > volume.origin.X + volumeDelta.X) &&
-                       !(box.center.Y + boxDelta.Y < volume.origin.Y - volumeDelta.Y) && !(box.center.Y - boxDelta.Y > volume.origin.Y + volumeDelta.Y) &&
-                       !(box.center.Z + boxDelta.Z < volume.origin.Z - volumeDelta.Z) && !(box.center.Z - boxDelta.Z > volume.origin.Z + volumeDelta.Z)
+                return !(box.origin.X + boxDelta.X < volume.origin.X - volumeDelta.X) && !(box.origin.X - boxDelta.X > volume.origin.X + volumeDelta.X) &&
+                       !(box.origin.Y + boxDelta.Y < volume.origin.Y - volumeDelta.Y) && !(box.origin.Y - boxDelta.Y > volume.origin.Y + volumeDelta.Y) &&
+                       !(box.origin.Z + boxDelta.Z < volume.origin.Z - volumeDelta.Z) && !(box.origin.Z - boxDelta.Z > volume.origin.Z + volumeDelta.Z)
                     ;
             }
 
             public static bool SphereOverlap(Sphere sphere, Volume<Vector3> volume)
             {
                 var volumeDelta = volume.size / 2f;
-                var nearest = Vector3.Max(volume.origin - volumeDelta, Vector3.Min(volume.origin + volumeDelta, sphere.center));
-                var distanceSqr = Vector3.DistanceSquared(nearest, sphere.center);
+                var nearest = Vector3.Max(volume.origin - volumeDelta, Vector3.Min(volume.origin + volumeDelta, sphere.origin));
+                var distanceSqr = Vector3.DistanceSquared(nearest, sphere.origin);
 
                 return distanceSqr < sphere.radius * sphere.radius;
             }
@@ -81,24 +81,24 @@ namespace GenericTree.Presets
         {
             public struct Box
             {
-                public Vector3 center;
+                public Vector3 origin;
                 public Vector3 size;
 
-                public Box(Vector3 center, Vector3 size)
+                public Box(Vector3 origin, Vector3 size)
                 {
-                    this.center = center;
+                    this.origin = origin;
                     this.size = size;
                 }
             }
 
             public struct Sphere
             {
-                public Vector3 center;
+                public Vector3 origin;
                 public float radius;
 
-                public Sphere(Vector3 center, float radius)
+                public Sphere(Vector3 origin, float radius)
                 {
-                    this.center = center;
+                    this.origin = origin;
                     this.radius = radius;
                 }
             }

@@ -55,16 +55,16 @@ namespace GenericTree.Presets
             {
                 var boxDelta = box.size / 2f;
                 var volumeDelta = volume.size / 2f;
-                return !(box.center.X + boxDelta.X < volume.origin.X - volumeDelta.X) && !(box.center.X - boxDelta.X > volume.origin.X + volumeDelta.X) &&
-                       !(box.center.Y + boxDelta.Y < volume.origin.Y - volumeDelta.Y) && !(box.center.Y - boxDelta.Y > volume.origin.Y + volumeDelta.Y)
+                return !(box.origin.X + boxDelta.X < volume.origin.X - volumeDelta.X) && !(box.origin.X - boxDelta.X > volume.origin.X + volumeDelta.X) &&
+                       !(box.origin.Y + boxDelta.Y < volume.origin.Y - volumeDelta.Y) && !(box.origin.Y - boxDelta.Y > volume.origin.Y + volumeDelta.Y)
                     ;
             }
 
             public static bool SphereOverlap(Sphere sphere, Volume<Vector2> volume)
             {
                 var volumeDelta = volume.size / 2f;
-                var nearest = Vector2.Max(volume.origin - volumeDelta, Vector2.Min(volume.origin + volumeDelta, sphere.center));
-                var distanceSqr = Vector2.DistanceSquared(nearest, sphere.center);
+                var nearest = Vector2.Max(volume.origin - volumeDelta, Vector2.Min(volume.origin + volumeDelta, sphere.origin));
+                var distanceSqr = Vector2.DistanceSquared(nearest, sphere.origin);
 
                 return distanceSqr < sphere.radius * sphere.radius;
             }
@@ -74,24 +74,24 @@ namespace GenericTree.Presets
         {
             public struct Box
             {
-                public Vector2 center;
+                public Vector2 origin;
                 public Vector2 size;
 
-                public Box(Vector2 center, Vector2 size)
+                public Box(Vector2 origin, Vector2 size)
                 {
-                    this.center = center;
+                    this.origin = origin;
                     this.size = size;
                 }
             }
 
             public struct Sphere
             {
-                public Vector2 center;
+                public Vector2 origin;
                 public float radius;
 
-                public Sphere(Vector2 center, float radius)
+                public Sphere(Vector2 origin, float radius)
                 {
-                    this.center = center;
+                    this.origin = origin;
                     this.radius = radius;
                 }
             }
