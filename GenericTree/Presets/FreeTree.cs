@@ -1,12 +1,12 @@
 ﻿using GenericVector;
 using System;
-using static GenericTree.Presets.GenericTree.IntersectionType;
+using static GenericTree.Presets.FreeTree.IntersectionType;
 
 namespace GenericTree.Presets
 {
-    public class GenericTree : Tree<Vector>
+    public class FreeTree : Tree<Vector>
     {
-        public GenericTree(Volume<Vector> startVolume, int maxDepth, int maxLeafsPerNode)
+        public FreeTree(Volume<Vector> startVolume, int maxDepth, int maxLeafsPerNode)
             : base(startVolume, maxDepth, maxLeafsPerNode) { }
 
         protected internal override Volume<Vector>[] VolumeSplit(Volume<Vector> volume)
