@@ -5,30 +5,31 @@ using System.Diagnostics;
 namespace GenericTree
 {
     [DebuggerDisplay("Depth: {depth}; Leafs: {leafCount}; HasChildren: {childNodes.Count > 0}")]
-    internal class Node<T>
+    public class Node<T>
     {
-        private int depth;
-        private Volume<T> volume;
-        private Tree<T> tree;
+        public Tree<T> Tree { get; private set; }
+        public int Depth { get; private set; }
+        public Volume<T> Volume { get { return volume; } }
+        public int LeafCount { get; private set; }
+        public IReadOnlyCollection<ILeaf<T>> Leafs { get { return leafs; } }
+        public IReadOnlyCollection<Node<T>> ChildNodes { get { return childNodes; } }
+
         private readonly HashSet<ILeaf<T>> leafs;
         private readonly List<Node<T>> childNodes;
-        private int leafCount;
+        private Volume<T> volume;
 
-
-        public Node()
+        public Node(Tree<T> tree)
         {
+            Tree = tree;
+
             childNodes = new List<Node<T>>();
             leafs = new HashSet<ILeaf<T>>();
         }
 
-        public Node<T> Context(
-            Tree<T> tree,
-            Volume<T> volume,
-            int level)
+        public virtual Node<T> Context(Volume<T> volume, int level)
         {
-            this.tree = tree;
+            Depth = level;
             this.volume = volume;
-            this.depth = level;
 
             childNodes.Clear();
             leafs.Clear();
@@ -36,34 +37,33 @@ namespace GenericTree
             return this;
         }
 
-        public Node<T> Reset()
+        public virtual Node<T> Reset()
         {
-            tree = null;
             childNodes.Clear();
             leafs.Clear();
-            leafCount = 0;
+            LeafCount = 0;
 
             return this;
         }
 
-        public bool Add(ILeaf<T> leaf)
+        public virtual bool Add(ILeaf<T> leaf)
         {
             var success = false;
             
-            if (leaf.IntersectionCheck(volume))
+            if (leaf.IntersectionCheck(Volume))
             {
                 if (childNodes.Count > 0)
                 {
                     success = AddToChildren(leaf);
-                    if (success) leafCount++;
+                    if (success) LeafCount++;
                 }
                 else
                 {
                     success = leafs.Add(leaf);
-                    leafCount = leafs.Count;
+                    LeafCount = leafs.Count;
 
-                    if (leafs.Count > tree.maxLeafsPerNode
-                        && depth < tree.maxDepth)
+                    if (leafs.Count > Tree.maxLeafsPerNode
+                        && Depth < Tree.maxDepth)
                         Split();
                 }
             }
@@ -71,39 +71,39 @@ namespace GenericTree
             return success;
         }
 
-        public bool Remove(ILeaf<T> leaf)
+        public virtual bool Remove(ILeaf<T> leaf)
         {
             var success = false;
             
-            if (leaf.IntersectionCheck(volume))
+            if (leaf.IntersectionCheck(Volume))
             {
                 if (childNodes.Count > 0)
                 {
                     foreach (var child in childNodes)
                         success |= child.Remove(leaf);
-                    if (success) leafCount--;
+                    if (success) LeafCount--;
                 }
                 else
                 {
                     success = leafs.Remove(leaf);
-                    leafCount = leafs.Count;
+                    LeafCount = leafs.Count;
                 }
             }
 
             return success;
         }
 
-        public void ProvideVolumes(List<Volume<T>> result)
+        public virtual void ProvideVolumes(List<Volume<T>> result)
         {
-            result.Add(volume);
+            result.Add(Volume);
 
             foreach (var child in childNodes)
                 child.ProvideVolumes(result);
         }
 
-        public void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionCheck)
+        public virtual void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionCheck)
         {
-            if (intersectionCheck(searchType, volume))
+            if (intersectionCheck(searchType, Volume))
             {
                 if (childNodes.Count > 0)
                     foreach (var child in childNodes)
@@ -115,11 +115,11 @@ namespace GenericTree
         }
 
 
-        public void TryMerge()
+        public virtual void TryMerge()
         {
             if (childNodes.Count > 0)
             {
-                if (leafCount <= tree.maxLeafsPerNode)
+                if (LeafCount <= Tree.maxLeafsPerNode)
                 {
                     foreach (var child in childNodes)
                         child.Disolve(leafs);
@@ -131,7 +131,7 @@ namespace GenericTree
             }
         }
 
-        private void Disolve(HashSet<ILeaf<T>> loseLeafs)
+        protected virtual void Disolve(HashSet<ILeaf<T>> loseLeafs)
         {
             if (childNodes.Count > 0)
                 foreach (var child in childNodes)
@@ -140,14 +140,14 @@ namespace GenericTree
                 foreach (var leaf in leafs)
                     loseLeafs.Add(leaf);
 
-            tree.ReturnNode(this);
+            Tree.ReturnNode(this);
         }
 
-        private void Split()
+        protected virtual void Split()
         {
-            var childVolumes = tree.splitVolume(volume);
+            var childVolumes = Tree.splitVolume(Volume);
             foreach (var childVolume in childVolumes)
-                childNodes.Add(tree.ProvideNode().Context(tree, childVolume, depth + 1));
+                childNodes.Add(Tree.ProvideNode().Context(childVolume, Depth + 1));
 
             foreach (var leaf in leafs)
                 AddToChildren(leaf);
@@ -155,7 +155,7 @@ namespace GenericTree
             leafs.Clear();
         }
 
-        private bool AddToChildren(ILeaf<T> leaf)
+        protected virtual bool AddToChildren(ILeaf<T> leaf)
         {
             var success = false;
 

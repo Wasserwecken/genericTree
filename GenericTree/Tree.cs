@@ -23,7 +23,7 @@ namespace GenericTree
             this.splitVolume = splitVolume;
 
             unusedNodes = new Stack<Node<T>>();
-            rootNode = ProvideNode().Context(this, startVolume, 0);
+            rootNode = ProvideNode().Context(startVolume, 0);
         }
 
         public bool Add(ILeaf<T> leaf)
@@ -56,7 +56,7 @@ namespace GenericTree
         internal Node<T> ProvideNode()
         {
             if (unusedNodes.Count <= 0)
-                return new Node<T>();
+                return new Node<T>(this);
             else
                 return unusedNodes.Pop();
         }
