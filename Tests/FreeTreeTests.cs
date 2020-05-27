@@ -1,16 +1,13 @@
+using GenericTree.Presets;
 using NUnit.Framework;
 
 namespace Tests
 {
-    public class Tests
+    [TestFixture]
+    public class FreeTreeTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
-        public void Test1()
+        public void Init()
         {
             Assert.Pass();
         }
