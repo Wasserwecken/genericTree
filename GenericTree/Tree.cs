@@ -39,6 +39,13 @@ namespace GenericTree
             return result;
         }
 
+        public virtual List<Node<T>> ProvideNodes()
+        {
+            var result = new List<Node<T>>();
+            rootNode.ProvideNodes(result);
+            return result;
+        }
+
         public virtual List<Volume<T>> ProvideVolumes()
         {
             var result = new List<Volume<T>>();

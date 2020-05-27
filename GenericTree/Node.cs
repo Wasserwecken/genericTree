@@ -93,6 +93,14 @@ namespace GenericTree
             return success;
         }
 
+        public virtual void ProvideNodes(List<Node<T>> result)
+        {
+            result.Add(this);
+
+            foreach (var child in childNodes)
+                child.ProvideNodes(result);
+        }
+
         public virtual void ProvideVolumes(List<Volume<T>> result)
         {
             result.Add(Volume);
