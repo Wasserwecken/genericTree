@@ -20,7 +20,7 @@ namespace GenericTree.Presets
             var newVolumes = new Volume<Vector>[splits];
             for(int split = 0; split < splits; split++)
             {
-                var offsetVector = Vector.ForEachAxis(new Vector(dimensions), (i, axis) => split % (int)Math.Pow(2, i) > 0 ? offset[i] : -offset[i]);
+                var offsetVector = Vector.ForEachAxis(offset, (i, axis) => split % (int)Math.Pow(2, i) > 0 ? axis : -axis);
                 newVolumes[split] = new Volume<Vector>(volume.origin + offsetVector, splitSize);
             }
 
@@ -29,11 +29,21 @@ namespace GenericTree.Presets
 
         public struct IntersectionTest
         {
+            public static int MinDimension(params Vector[] vectors)
+            {
+                var result = vectors[0].Dimensions;
+                for (int i = 1; i < vectors.Length; i++)
+                    result = Math.Min(result, vectors[i].Dimensions);
+
+                return result;
+            }
+
             public static bool PointBox(Vector point, Volume<Vector> volume)
             {
                 var delta = volume.size / 2f;
+                var minDimension = MinDimension(point, volume.origin, volume.size);
 
-                for (int i = 0; i < point.Dimensions; i++)
+                for (int i = 0; i < minDimension; i++)
                     if (point[i] < volume.origin[i] - delta[i] || point[i] > volume.origin[i] + delta[i])
                         return false;
 
@@ -44,8 +54,9 @@ namespace GenericTree.Presets
             {
                 var boxDelta = box.size / 2f;
                 var volumeDelta = volume.size / 2f;
+                var minDimension = MinDimension(box.origin, box.size, volume.origin, volume.size);
 
-                for (int i = 0; i < box.origin.Dimensions; i++)
+                for (int i = 0; i < minDimension; i++)
                     if (box.origin[i] + boxDelta[i] < volume.origin[i] - volumeDelta[i] || box.origin[i] - boxDelta[i] > volume.origin[i] + volumeDelta[i])
                         return false;
 
@@ -55,6 +66,7 @@ namespace GenericTree.Presets
             public static bool SphereBox(Sphere sphere, Volume<Vector> volume)
             {
                 var volumeDelta = volume.size / 2f;
+
                 var nearest = Vector.Max(volume.origin - volumeDelta, Vector.Min(volume.origin + volumeDelta, sphere.origin));
                 var distanceSqr = Vector.DistanceSquared(nearest, sphere.origin);
 
