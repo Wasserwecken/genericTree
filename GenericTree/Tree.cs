@@ -3,25 +3,19 @@ using System.Collections.Generic;
 
 namespace GenericTree
 {
-    public class Tree<T>
+    public abstract class Tree<T>
     {
         public readonly int maxDepth;
         public readonly int maxLeafsPerNode;
         public Volume<T> TreeVolume => rootNode.Volume;
 
-        internal readonly Func<Volume<T>, Volume<T>[]> volumeSplit;
         private readonly Stack<Node<T>> unusedNodes;
         private readonly Node<T> rootNode;
 
-        public Tree(
-            Volume<T> startVolume,
-            int maxDepth,
-            int maxLeafsPerNode,
-            Func<Volume<T>, Volume<T>[]> volumeSplit)
+        public Tree( Volume<T> startVolume, int maxDepth, int maxLeafsPerNode)
         {
             this.maxDepth = maxDepth;
             this.maxLeafsPerNode = maxLeafsPerNode;
-            this.volumeSplit = volumeSplit;
 
             unusedNodes = new Stack<Node<T>>();
             rootNode = ProvideNode().Context(startVolume, 0);
@@ -79,5 +73,7 @@ namespace GenericTree
         {
             unusedNodes.Push(node.Reset());
         }
+
+        protected internal abstract Volume<T>[] VolumeSplit(Volume<T> volume);
     }
 }

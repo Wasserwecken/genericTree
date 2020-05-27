@@ -5,12 +5,11 @@ namespace GenericTree.Presets
     public class GenericTree : Tree<Vector>
     {
         public GenericTree(Volume<Vector> startVolume, int maxDepth, int maxLeafsPerNode)
-            : base(startVolume, maxDepth, maxLeafsPerNode, VolumeSplit)
-        { }
+            : base(startVolume, maxDepth, maxLeafsPerNode) { }
 
-        private static Volume<Vector>[] VolumeSplit(Volume<Vector> volume)
+        protected internal override Volume<Vector>[] VolumeSplit(Volume<Vector> volume)
         {
-            return new Volume<Vector>[1];
+            return new Volume<Vector>[0];
         }
     }
 }

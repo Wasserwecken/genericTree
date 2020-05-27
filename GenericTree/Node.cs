@@ -157,7 +157,7 @@ namespace GenericTree
 
         protected virtual void Split()
         {
-            var childVolumes = Tree.volumeSplit(Volume);
+            var childVolumes = Tree.VolumeSplit(Volume);
             foreach (var childVolume in childVolumes)
                 childNodes.Add(Tree.ProvideNode().Context(childVolume, Depth + 1));
 
