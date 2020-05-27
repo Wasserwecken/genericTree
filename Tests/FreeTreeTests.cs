@@ -19,9 +19,16 @@ namespace Tests
         public void Add()
         {
             tree.Add(new FreeTreeLeafPoint(new Vector(1f, 1f)));
+            Assert.AreEqual(1, tree.LeafCount);
+
             tree.Add(new FreeTreeLeafPoint(new Vector(1f, -1f)));
+            Assert.AreEqual(2, tree.LeafCount);
+
             tree.Add(new FreeTreeLeafPoint(new Vector(-1f, 1f)));
+            Assert.AreEqual(3, tree.LeafCount);
+
             tree.Add(new FreeTreeLeafPoint(new Vector(-1f, -1f)));
+            Assert.AreEqual(4, tree.LeafCount);
         }
     }
 }

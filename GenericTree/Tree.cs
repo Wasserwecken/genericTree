@@ -9,6 +9,8 @@ namespace GenericTree
         public readonly int maxLeafsPerNode;
         public Volume<T> TreeVolume => rootNode.Volume;
 
+        public int LeafCount => rootNode.LeafCount;
+
         private readonly Stack<Node<T>> unusedNodes;
         private readonly Node<T> rootNode;
 

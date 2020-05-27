@@ -95,7 +95,7 @@ namespace GenericTree
 
         public virtual void ListLeafs(HashSet<ILeaf<T>> result, int minDepth = 0, int maxDepth = 0)
         {
-            if (Depth > minDepth)
+            if (Depth >= minDepth)
                 foreach (var leaf in leafs)
                     result.Add(leaf);
 
@@ -106,7 +106,7 @@ namespace GenericTree
 
         public virtual void ListNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
         {
-            if (Depth > minDepth)
+            if (Depth >= minDepth)
                 result.Add(this);
 
             if (maxDepth > 0 && Depth < maxDepth)
@@ -116,7 +116,7 @@ namespace GenericTree
 
         public virtual void ListVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
         {
-            if (Depth > minDepth)
+            if (Depth >= minDepth)
                 result.Add(Volume);
 
             if (maxDepth > 0 && Depth < maxDepth)
