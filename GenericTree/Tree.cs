@@ -36,6 +36,16 @@ namespace GenericTree
             return result;
         }
 
+        public virtual HashSet<ILeaf<T>> ListLeafs(int minDepth = 0, int maxDepth = 0)
+        {
+            var result = new HashSet<ILeaf<T>>();
+            ListLeafs(result, minDepth, maxDepth);
+            return result;
+        }
+
+        public virtual void ListLeafs(HashSet<ILeaf<T>> result, int minDepth = 0, int maxDepth = 0)
+            => rootNode.ListLeafs(result, minDepth, maxDepth);
+        
         public virtual List<Node<T>> ListNodes(int minDepth = 0, int maxDepth = 0)
         {
             var result = new List<Node<T>>();

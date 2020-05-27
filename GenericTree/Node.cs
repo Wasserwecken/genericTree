@@ -93,6 +93,17 @@ namespace GenericTree
             return success;
         }
 
+        public virtual void ListLeafs(HashSet<ILeaf<T>> result, int minDepth = 0, int maxDepth = 0)
+        {
+            if (Depth > minDepth)
+                foreach (var leaf in leafs)
+                    result.Add(leaf);
+
+            if (maxDepth > 0 && Depth < maxDepth)
+                foreach (var child in childNodes)
+                    child.ListLeafs(result, minDepth, maxDepth);
+        }
+
         public virtual void ListNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
         {
             if (Depth > minDepth)
@@ -100,7 +111,7 @@ namespace GenericTree
 
             if (maxDepth > 0 && Depth < maxDepth)
                 foreach (var child in childNodes)
-                    child.ListNodes(result);
+                    child.ListNodes(result, minDepth, maxDepth);
         }
 
         public virtual void ListVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
@@ -110,7 +121,7 @@ namespace GenericTree
 
             if (maxDepth > 0 && Depth < maxDepth)
                 foreach (var child in childNodes)
-                    child.ListVolumes(result);
+                    child.ListVolumes(result, minDepth, maxDepth);
         }
 
         public virtual void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionCheck)
