@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace GenericTree
 {
+    [DebuggerDisplay("LeafCount: {LeafCount}")]
     public abstract class Tree<T>
     {
         public readonly int maxDepth;

@@ -1,5 +1,8 @@
-﻿namespace GenericTree
+﻿using System.Diagnostics;
+
+namespace GenericTree
 {
+    [DebuggerDisplay("Origin: {origin}; Size: {size}")]
     public struct Volume<T>
     {
         public T origin;

@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace GenericTree
 {
-    [DebuggerDisplay("Depth: {depth}; Leafs: {leafCount}; HasChildren: {childNodes.Count > 0}")]
+    [DebuggerDisplay("Depth: {Depth}; Leafs: {LeafCount}; Children: {ChildNodes.Count > 0}; Volume: {Volume}")]
     public class Node<T>
     {
         public Tree<T> Tree { get; private set; }

@@ -23,7 +23,7 @@ namespace GenericTree.Presets
             var newVolumes = new Volume<Vector>[splits];
             for(int split = 0; split < splits; split++)
             {
-                var offsetVector = Vector.ForEachAxis(offset, (i, axis) => split % (int)Math.Pow(2, i) > 0 ? axis : -axis);
+                var offsetVector = Vector.ForEachAxis(offset, (i, axis) => split / Math.Pow(2, i) % 2 >= 1 ? -axis : axis);
                 newVolumes[split] = new Volume<Vector>(volume.origin + offsetVector, splitSize);
             }
 
