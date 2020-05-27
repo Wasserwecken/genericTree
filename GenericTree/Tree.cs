@@ -12,7 +12,10 @@ namespace GenericTree
         private readonly Stack<Node<T>> unusedNodes;
         private readonly Node<T> rootNode;
 
-        public Tree( Volume<T> startVolume, int maxDepth, int maxLeafsPerNode)
+        public Tree(T origin, T size, int maxDepth, int maxLeafsPerNode)
+            : this(new Volume<T>(origin, size), maxDepth, maxLeafsPerNode) { }
+
+        public Tree(Volume<T> startVolume, int maxDepth, int maxLeafsPerNode)
         {
             this.maxDepth = maxDepth;
             this.maxLeafsPerNode = maxLeafsPerNode;

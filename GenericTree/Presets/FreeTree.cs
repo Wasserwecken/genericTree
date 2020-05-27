@@ -6,6 +6,9 @@ namespace GenericTree.Presets
 {
     public class FreeTree : Tree<Vector>
     {
+        public FreeTree(Vector origin, Vector size, int maxDepth, int maxLeafsPerNode)
+            : this(new Volume<Vector>(origin, size), maxDepth, maxLeafsPerNode) { }
+
         public FreeTree(Volume<Vector> startVolume, int maxDepth, int maxLeafsPerNode)
             : base(startVolume, maxDepth, maxLeafsPerNode) { }
 

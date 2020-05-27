@@ -6,6 +6,9 @@ namespace GenericTree.Presets
 {
     public class Quadtree : Tree<Vector2>
     {
+        public Quadtree(Vector2 origin, Vector2 size, int maxDepth, int maxLeafsPerNode)
+            : this(new Volume<Vector2>(origin, size), maxDepth, maxLeafsPerNode) { }
+
         public Quadtree(Volume<Vector2> startVolume, int maxDepth, int maxLeafsPerNode)
             : base(startVolume, maxDepth, maxLeafsPerNode) { }
 

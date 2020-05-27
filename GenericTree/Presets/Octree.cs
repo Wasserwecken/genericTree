@@ -6,6 +6,9 @@ namespace GenericTree.Presets
 {
     public class Octree : Tree<Vector3>
     {
+        public Octree(Vector3 origin, Vector3 size, int maxDepth, int maxLeafsPerNode)
+            : this(new Volume<Vector3>(origin, size), maxDepth, maxLeafsPerNode) { }
+
         public Octree(Volume<Vector3> startVolume, int maxDepth, int maxLeafsPerNode)
             : base(startVolume, maxDepth, maxLeafsPerNode) { }
 
