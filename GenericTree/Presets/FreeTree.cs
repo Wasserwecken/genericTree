@@ -31,6 +31,9 @@ namespace GenericTree.Presets
         {
             public static int MinDimension(params Vector[] vectors)
             {
+                if (vectors.Length == 0)
+                    return 0;
+
                 var result = vectors[0].Dimensions;
                 for (int i = 1; i < vectors.Length; i++)
                     result = Math.Min(result, vectors[i].Dimensions);
