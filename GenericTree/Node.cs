@@ -93,20 +93,24 @@ namespace GenericTree
             return success;
         }
 
-        public virtual void ProvideNodes(List<Node<T>> result)
+        public virtual void ProvideNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
         {
-            result.Add(this);
+            if (Depth > minDepth)
+                result.Add(this);
 
-            foreach (var child in childNodes)
-                child.ProvideNodes(result);
+            if (maxDepth > 0 && Depth < maxDepth)
+                foreach (var child in childNodes)
+                    child.ProvideNodes(result);
         }
 
-        public virtual void ProvideVolumes(List<Volume<T>> result)
+        public virtual void ProvideVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
         {
-            result.Add(Volume);
+            if (Depth > minDepth)
+                result.Add(Volume);
 
-            foreach (var child in childNodes)
-                child.ProvideVolumes(result);
+            if (maxDepth > 0 && Depth < maxDepth)
+                foreach (var child in childNodes)
+                    child.ProvideVolumes(result);
         }
 
         public virtual void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionCheck)
@@ -155,7 +159,7 @@ namespace GenericTree
         {
             var childVolumes = Tree.splitVolume(Volume);
             foreach (var childVolume in childVolumes)
-                childNodes.Add(Tree.ProvideNode().Context(childVolume, Depth + 1));
+                childNodes.Add(Tree.CreateNode().Context(childVolume, Depth + 1));
 
             foreach (var leaf in leafs)
                 AddToChildren(leaf);

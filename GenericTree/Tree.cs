@@ -24,7 +24,7 @@ namespace GenericTree
             this.splitVolume = splitVolume;
 
             unusedNodes = new Stack<Node<T>>();
-            rootNode = ProvideNode().Context(startVolume, 0);
+            rootNode = CreateNode().Context(startVolume, 0);
         }
 
         public virtual bool Add(ILeaf<T> leaf)
@@ -39,19 +39,25 @@ namespace GenericTree
             return result;
         }
 
-        public virtual List<Node<T>> ProvideNodes()
+        public virtual List<Node<T>> ProvideNodes(int minDepth = 0, int maxDepth = 0)
         {
             var result = new List<Node<T>>();
-            rootNode.ProvideNodes(result);
+            ProvideNodes(result, minDepth, maxDepth);
             return result;
         }
 
-        public virtual List<Volume<T>> ProvideVolumes()
+        public virtual void ProvideNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
+            => rootNode.ProvideNodes(result, minDepth, maxDepth);
+
+        public virtual List<Volume<T>> ProvideVolumes(int minDepth = 0, int maxDepth = 0)
         {
             var result = new List<Volume<T>>();
-            rootNode.ProvideVolumes(result);
+            ProvideVolumes(result, minDepth, maxDepth);
             return result;
         }
+
+        public virtual void ProvideVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
+            => rootNode.ProvideVolumes(result, minDepth, maxDepth);
 
         public virtual HashSet<ILeaf<T>> Search<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> intersection)
         {
@@ -61,21 +67,15 @@ namespace GenericTree
         }
 
 
-        protected virtual Node<T> ProvideNode()
+        internal virtual Node<T> CreateNode()
         {
-            if (unusedNodes.Count <= 0)
-                return new Node<T>(this);
-            else
+            if (unusedNodes.Count > 0)
                 return unusedNodes.Pop();
+            else
+                return new Node<T>(this);
         }
 
-        protected virtual void ReturnNodes(List<Node<T>> nodes)
-        {
-            foreach (var node in nodes)
-                unusedNodes.Push(node.Reset());
-        }
-
-        protected virtual void ReturnNode(Node<T> node)
+        internal virtual void ReturnNode(Node<T> node)
         {
             unusedNodes.Push(node.Reset());
         }
