@@ -50,7 +50,7 @@ namespace GenericTree
         {
             var success = false;
             
-            if (leaf.IntersectionCheck(Volume))
+            if (leaf.IntersectionTest(Volume))
             {
                 if (childNodes.Count > 0)
                 {
@@ -75,7 +75,7 @@ namespace GenericTree
         {
             var success = false;
             
-            if (leaf.IntersectionCheck(Volume))
+            if (leaf.IntersectionTest(Volume))
             {
                 if (childNodes.Count > 0)
                 {
@@ -93,24 +93,24 @@ namespace GenericTree
             return success;
         }
 
-        public virtual void ProvideNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
+        public virtual void ListNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
         {
             if (Depth > minDepth)
                 result.Add(this);
 
             if (maxDepth > 0 && Depth < maxDepth)
                 foreach (var child in childNodes)
-                    child.ProvideNodes(result);
+                    child.ListNodes(result);
         }
 
-        public virtual void ProvideVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
+        public virtual void ListVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
         {
             if (Depth > minDepth)
                 result.Add(Volume);
 
             if (maxDepth > 0 && Depth < maxDepth)
                 foreach (var child in childNodes)
-                    child.ProvideVolumes(result);
+                    child.ListVolumes(result);
         }
 
         public virtual void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionCheck)
@@ -157,9 +157,9 @@ namespace GenericTree
 
         protected virtual void Split()
         {
-            var childVolumes = Tree.splitVolume(Volume);
+            var childVolumes = Tree.volumeSplit(Volume);
             foreach (var childVolume in childVolumes)
-                childNodes.Add(Tree.CreateNode().Context(childVolume, Depth + 1));
+                childNodes.Add(Tree.ProvideNode().Context(childVolume, Depth + 1));
 
             foreach (var leaf in leafs)
                 AddToChildren(leaf);

@@ -9,7 +9,7 @@ namespace GenericTree
         public readonly int maxLeafsPerNode;
         public Volume<T> TreeVolume => rootNode.Volume;
 
-        internal readonly Func<Volume<T>, Volume<T>[]> splitVolume;
+        internal readonly Func<Volume<T>, Volume<T>[]> volumeSplit;
         private readonly Stack<Node<T>> unusedNodes;
         private readonly Node<T> rootNode;
 
@@ -17,14 +17,14 @@ namespace GenericTree
             Volume<T> startVolume,
             int maxDepth,
             int maxLeafsPerNode,
-            Func<Volume<T>, Volume<T>[]> splitVolume)
+            Func<Volume<T>, Volume<T>[]> volumeSplit)
         {
             this.maxDepth = maxDepth;
             this.maxLeafsPerNode = maxLeafsPerNode;
-            this.splitVolume = splitVolume;
+            this.volumeSplit = volumeSplit;
 
             unusedNodes = new Stack<Node<T>>();
-            rootNode = CreateNode().Context(startVolume, 0);
+            rootNode = ProvideNode().Context(startVolume, 0);
         }
 
         public virtual bool Add(ILeaf<T> leaf)
@@ -39,35 +39,35 @@ namespace GenericTree
             return result;
         }
 
-        public virtual List<Node<T>> ProvideNodes(int minDepth = 0, int maxDepth = 0)
+        public virtual List<Node<T>> ListNodes(int minDepth = 0, int maxDepth = 0)
         {
             var result = new List<Node<T>>();
-            ProvideNodes(result, minDepth, maxDepth);
+            ListNodes(result, minDepth, maxDepth);
             return result;
         }
 
-        public virtual void ProvideNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
-            => rootNode.ProvideNodes(result, minDepth, maxDepth);
+        public virtual void ListNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
+            => rootNode.ListNodes(result, minDepth, maxDepth);
 
-        public virtual List<Volume<T>> ProvideVolumes(int minDepth = 0, int maxDepth = 0)
+        public virtual List<Volume<T>> ListVolumes(int minDepth = 0, int maxDepth = 0)
         {
             var result = new List<Volume<T>>();
-            ProvideVolumes(result, minDepth, maxDepth);
+            ListVolumes(result, minDepth, maxDepth);
             return result;
         }
 
-        public virtual void ProvideVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
-            => rootNode.ProvideVolumes(result, minDepth, maxDepth);
+        public virtual void ListVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
+            => rootNode.ListVolumes(result, minDepth, maxDepth);
 
-        public virtual HashSet<ILeaf<T>> Search<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> intersection)
+        public virtual HashSet<ILeaf<T>> Find<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> intersectionTest)
         {
             var result = new HashSet<ILeaf<T>>();
-            rootNode.Find(searchType, result, intersection);
+            rootNode.Find(searchType, result, intersectionTest);
             return result;
         }
 
 
-        internal virtual Node<T> CreateNode()
+        internal virtual Node<T> ProvideNode()
         {
             if (unusedNodes.Count > 0)
                 return unusedNodes.Pop();

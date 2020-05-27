@@ -7,27 +7,27 @@ namespace GenericTree.Presets
     public class Octree : Tree<Vector3>
     {
         public Octree(Volume<Vector3> startVolume, int maxDepth, int maxLeafsPerNode)
-            : base(startVolume, maxDepth, maxLeafsPerNode, SplitVolume)
+            : base(startVolume, maxDepth, maxLeafsPerNode, VolumeSplit)
         { }
 
 
         public HashSet<ILeaf<Vector3>> SearchByPoint(Vector3 point)
         {
-            return Search(point, IntersectionTest.PointBox);
+            return Find(point, IntersectionTest.PointBox);
         }
 
         public HashSet<ILeaf<Vector3>> SearchByBox(Vector3 origin, Vector3 size)
         {
-            return Search(new Box(origin, size), IntersectionTest.BoxBox);
+            return Find(new Box(origin, size), IntersectionTest.BoxBox);
         }
 
         public HashSet<ILeaf<Vector3>> SearchBySphere(Vector3 origin, float radius)
         {
-            return Search(new Sphere(origin, radius), IntersectionTest.SphereBox);
+            return Find(new Sphere(origin, radius), IntersectionTest.SphereBox);
         }
 
 
-        private static Volume<Vector3>[] SplitVolume(Volume<Vector3> volume)
+        private static Volume<Vector3>[] VolumeSplit(Volume<Vector3> volume)
         {
             var splitSize = volume.size / 2f;
             var offset = splitSize / 2f;

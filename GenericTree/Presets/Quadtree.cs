@@ -7,26 +7,26 @@ namespace GenericTree.Presets
     public class Quadtree : Tree<Vector2>
     {
         public Quadtree(Volume<Vector2> startVolume, int maxDepth, int maxLeafsPerNode)
-            : base(startVolume, maxDepth, maxLeafsPerNode, SplitVolume)
+            : base(startVolume, maxDepth, maxLeafsPerNode, VolumeSplit)
         { }
 
         public HashSet<ILeaf<Vector2>> SearchByPoint(Vector2 point)
         {
-            return Search(point, IntersectionTest.PointBox);
+            return Find(point, IntersectionTest.PointBox);
         }
 
         public HashSet<ILeaf<Vector2>> SearchByBox(Vector2 origin, Vector2 size)
         {
-            return Search(new Box(origin, size), IntersectionTest.BoxBox);
+            return Find(new Box(origin, size), IntersectionTest.BoxBox);
         }
 
         public HashSet<ILeaf<Vector2>> SearchByCircle(Vector2 origin, float radius)
         {
-            return Search(new Sphere(origin, radius), IntersectionTest.SphereBox);
+            return Find(new Sphere(origin, radius), IntersectionTest.SphereBox);
         }
 
 
-        private static Volume<Vector2>[] SplitVolume(Volume<Vector2> volume)
+        private static Volume<Vector2>[] VolumeSplit(Volume<Vector2> volume)
         {
             var splitSize = volume.size / 2f;
             var offset = splitSize / 2f;
