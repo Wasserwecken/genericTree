@@ -1,0 +1,3 @@
+[submodule "genericVector"]
+	path = genericVector
+	url = https://github.com/Wasserwecken/genericVector
