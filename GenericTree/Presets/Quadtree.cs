@@ -39,7 +39,7 @@ namespace GenericTree.Presets
         }
 
         //https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_collision_detection
-        public static class IntersectionTest
+        public struct IntersectionTest
         {
             public static bool PointBox(Vector2 point, Volume<Vector2> volume)
             {
@@ -68,7 +68,7 @@ namespace GenericTree.Presets
             }
         }
 
-        public static class IntersectionType
+        public struct IntersectionType
         {
             public struct Box
             {
