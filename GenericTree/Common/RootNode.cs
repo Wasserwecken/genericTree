@@ -9,6 +9,7 @@ namespace GenericTree.Common
     {
         public Volume<T> Volume => volume;
         public int LeafCount => leafCount;
+        public int Depth => CheckDepth();
 
 
         public RootNode(T origin, T size, int maxDepth, int maxLeafsPerNode)

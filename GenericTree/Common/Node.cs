@@ -18,7 +18,7 @@ namespace GenericTree.Common
         protected readonly HashSet<ILeaf<T>> leafs;
         protected readonly List<Node<T>> childNodes;
         
-        protected static readonly Stack<Node<T>> unusedNodes;
+        protected static readonly Stack<Node<T>> unusedNodes = new Stack<Node<T>>();
 
 
         public Node()
@@ -101,14 +101,12 @@ namespace GenericTree.Common
         public virtual void FindBy<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionTest)
         {
             if (intersectionTest(searchType, volume))
-            {
                 if (childNodes.Count > 0)
                     foreach (var child in childNodes)
                         child.FindBy(searchType, resultList, intersectionTest);
                 else
                     foreach (var leaf in leafs)
                         resultList.Add(leaf);
-            }
         }
 
 
@@ -161,6 +159,17 @@ namespace GenericTree.Common
                 success |= child.Add(leaf);
 
             return success;
+        }
+
+        protected virtual int CheckDepth()
+        {
+            var result = depth;
+
+            if (childNodes.Count > 0)
+                foreach (var child in childNodes)
+                    result = Math.Max(result, child.CheckDepth());
+
+            return result;
         }
     }
 }
