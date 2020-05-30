@@ -1,8 +1,5 @@
 ﻿using GenericTree.Common;
 using GenericVector;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GenericTree.FreeTree
 {
@@ -25,7 +22,7 @@ namespace GenericTree.FreeTree
         public static bool TestIntersection(Vector position, Volume<Vector> volume)
         {
             var delta = volume.size / 2f;
-            var minDimension = Math.Min(position.Dimensions, Math.Min(volume.origin.Dimensions, volume.size.Dimensions));
+            var minDimension = Vector.MinDimension(position, volume.origin, volume.size);
 
             for (int i = 0; i < minDimension; i++)
                 if (position[i] < volume.origin[i] - delta[i] || position[i] > volume.origin[i] + delta[i])

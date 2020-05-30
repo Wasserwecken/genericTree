@@ -30,7 +30,7 @@ namespace GenericTree.FreeTree
         public static bool TestIntersection(Vector minBounds, Vector maxBounds, Volume<Vector> volume)
         {
             var volumeDelta = volume.size / 2f;
-            var minDimension = Math.Min(minBounds.Dimensions, Math.Min(maxBounds.Dimensions, Math.Min(volume.origin.Dimensions, volume.size.Dimensions)));
+            var minDimension = Vector.MinDimension(minBounds, maxBounds, volume.origin, volume.size);
 
             for (int i = 0; i < minDimension; i++)
                 if (maxBounds[i] < volume.origin[i] - volumeDelta[i] || minBounds[i] > volume.origin[i] + volumeDelta[i])
