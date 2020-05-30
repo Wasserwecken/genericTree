@@ -11,12 +11,10 @@ namespace GenericTree.Common
         public int Depth { get; private set; }
         public Volume<T> Volume { get { return volume; } }
         public int LeafCount { get; private set; }
-        public IReadOnlyCollection<ILeaf<T>> Leafs { get { return leafs; } }
-        public IReadOnlyCollection<Node<T>> ChildNodes { get { return childNodes; } }
 
-        private readonly HashSet<ILeaf<T>> leafs;
-        private readonly List<Node<T>> childNodes;
-        private Volume<T> volume;
+        protected readonly HashSet<ILeaf<T>> leafs;
+        protected readonly List<Node<T>> childNodes;
+        protected Volume<T> volume;
 
         public Node(Tree<T> tree)
         {
@@ -26,7 +24,7 @@ namespace GenericTree.Common
             leafs = new HashSet<ILeaf<T>>();
         }
 
-        public virtual Node<T> Context(Volume<T> volume, int level)
+        public virtual Node<T> SetContext(Volume<T> volume, int level)
         {
             Depth = level;
             this.volume = volume;
@@ -139,7 +137,7 @@ namespace GenericTree.Common
         {
             var childVolumes = Tree.VolumeSplit(Volume);
             foreach (var childVolume in childVolumes)
-                childNodes.Add(Tree.ProvideNode().Context(childVolume, Depth + 1));
+                childNodes.Add(Tree.ProvideNode().SetContext(childVolume, Depth + 1));
 
             foreach (var leaf in leafs)
                 AddToChildren(leaf);

@@ -13,8 +13,9 @@ namespace GenericTree.Common
 
         public int LeafCount => rootNode.LeafCount;
 
-        private readonly Stack<Node<T>> unusedNodes;
-        private readonly Node<T> rootNode;
+        protected readonly Stack<Node<T>> unusedNodes;
+        protected readonly Node<T> rootNode;
+
 
         public Tree(T origin, T size, int maxDepth, int maxLeafsPerNode)
             : this(new Volume<T>(origin, size), maxDepth, maxLeafsPerNode) { }
@@ -25,13 +26,12 @@ namespace GenericTree.Common
             this.maxLeafsPerNode = maxLeafsPerNode;
 
             unusedNodes = new Stack<Node<T>>();
-            rootNode = ProvideNode().Context(startVolume, 0);
+            rootNode = ProvideNode().SetContext(startVolume, 0);
         }
 
+
         public virtual bool Add(ILeaf<T> leaf)
-        {
-            return rootNode.Add(leaf);
-        }
+            => rootNode.Add(leaf);
 
         public virtual bool Remove(ILeaf<T> leaf)
         {
@@ -47,7 +47,8 @@ namespace GenericTree.Common
             return result;
         }
 
-        internal virtual Node<T> ProvideNode()
+
+        public virtual Node<T> ProvideNode()
         {
             if (unusedNodes.Count > 0)
                 return unusedNodes.Pop();
@@ -55,7 +56,7 @@ namespace GenericTree.Common
                 return new Node<T>(this);
         }
 
-        internal virtual void ReturnNode(Node<T> node)
+        public virtual void ReturnNode(Node<T> node)
         {
             unusedNodes.Push(node.Reset());
         }
