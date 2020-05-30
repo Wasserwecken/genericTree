@@ -12,14 +12,14 @@ namespace GenericTree.Octree
 
             return new Volume<Vector3>[8]
             {
-                new Volume<Vector3>(volume.origin + offset * new Vector3(1, 1, -1), splitSize),
                 new Volume<Vector3>(volume.origin + offset * new Vector3(1, 1, 1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(1, -1, -1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(1, -1, 1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, 1, -1), splitSize),
                 new Volume<Vector3>(volume.origin + offset * new Vector3(-1, 1, 1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, -1, -1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, -1, 1), splitSize)
+                new Volume<Vector3>(volume.origin + offset * new Vector3(1, -1, 1), splitSize),
+                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, -1, 1), splitSize),
+                new Volume<Vector3>(volume.origin + offset * new Vector3(1, 1, -1), splitSize),
+                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, 1, -1), splitSize),
+                new Volume<Vector3>(volume.origin + offset * new Vector3(1, -1, -1), splitSize),
+                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, -1, -1), splitSize)
             };
         }
     }

@@ -12,10 +12,10 @@ namespace GenericTree.Quadtree
 
             return new Volume<Vector2>[4]
             {
-                new Volume<Vector2>(volume.origin + offset * new Vector2(1, -1), splitSize),
                 new Volume<Vector2>(volume.origin + offset * new Vector2(1, 1), splitSize),
-                new Volume<Vector2>(volume.origin + offset * new Vector2(-1, -1), splitSize),
                 new Volume<Vector2>(volume.origin + offset * new Vector2(-1, 1), splitSize),
+                new Volume<Vector2>(volume.origin + offset * new Vector2(1, -1), splitSize),
+                new Volume<Vector2>(volume.origin + offset * new Vector2(-1, -1), splitSize),
             };
         }
     }
