@@ -98,13 +98,13 @@ namespace GenericTree.Common
             return success;
         }
 
-        public virtual void Find<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionTest)
+        public virtual void FindBy<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionTest)
         {
             if (intersectionTest(searchType, volume))
             {
                 if (childNodes.Count > 0)
                     foreach (var child in childNodes)
-                        child.Find(searchType, resultList, intersectionTest);
+                        child.FindBy(searchType, resultList, intersectionTest);
                 else
                     foreach (var leaf in leafs)
                         resultList.Add(leaf);
