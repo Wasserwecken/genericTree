@@ -2,7 +2,7 @@
 
 namespace GenericTree.Common
 {
-    [DebuggerDisplay("Origin: {origin}; Size: {size}")]
+    [DebuggerDisplay("Origin: {origin}, Size: {size}")]
     public struct Volume<T>
     {
         public T origin;
