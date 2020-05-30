@@ -26,7 +26,6 @@ Global
 		{C3B29A35-C1AA-4660-B2F8-298CB1537EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C3B29A35-C1AA-4660-B2F8-298CB1537EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3B29A35-C1AA-4660-B2F8-298CB1537EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3B29A35-C1AA-4660-B2F8-298CB1537EDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

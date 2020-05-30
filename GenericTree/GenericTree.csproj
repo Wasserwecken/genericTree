@@ -4,10 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>GenericTree</AssemblyName>
     <RootNamespace>GenericTree</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>false</Optimize>
+    <OutputPath>..\build\debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\build\release\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
