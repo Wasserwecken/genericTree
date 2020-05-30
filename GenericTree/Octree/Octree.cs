@@ -13,22 +13,22 @@ namespace GenericTree.Octree
             : base(startVolume, maxDepth, maxLeafsPerNode) { }
 
 
-        public HashSet<ILeaf<Vector3>> SearchByPoint(Vector3 point)
-            => Find(point, Point.TestIntersection);
+        public HashSet<ILeaf<Vector3>> FindByPoint(Vector3 point)
+            => FindBy(point, Point.TestIntersection);
 
 
-        public HashSet<ILeaf<Vector3>> SearchByBox(Vector3 origin, Vector3 size)
-            => SearchByBox(new Box(origin, size));
+        public HashSet<ILeaf<Vector3>> FindByBox(Vector3 origin, Vector3 size)
+            => FindByBox(new Box(origin, size));
 
-        public HashSet<ILeaf<Vector3>> SearchByBox(Box box)
-            => Find(box, Box.TestIntersection);
+        public HashSet<ILeaf<Vector3>> FindByBox(Box box)
+            => FindBy(box, Box.TestIntersection);
 
 
-        public HashSet<ILeaf<Vector3>> SearchBySphere(Vector3 origin, float radius)
-            => SearchBySphere(new Sphere(origin, radius));
+        public HashSet<ILeaf<Vector3>> FindBySphere(Vector3 origin, float radius)
+            => FindBySphere(new Sphere(origin, radius));
 
-        public HashSet<ILeaf<Vector3>> SearchBySphere(Sphere sphere)
-            => Find(sphere, Sphere.TestIntersection);
+        public HashSet<ILeaf<Vector3>> FindBySphere(Sphere sphere)
+            => FindBy(sphere, Sphere.TestIntersection);
 
 
         protected internal override Volume<Vector3>[] VolumeSplit(Volume<Vector3> volume)

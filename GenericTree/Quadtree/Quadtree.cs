@@ -13,22 +13,22 @@ namespace GenericTree.Quadtree
             : base(startVolume, maxDepth, maxLeafsPerNode) { }
 
 
-        public HashSet<ILeaf<Vector2>> SearchByPoint(Vector2 point)
-            => Find(point, Point.TestIntersection);
+        public HashSet<ILeaf<Vector2>> FindByPoint(Vector2 point)
+            => FindBy(point, Point.TestIntersection);
 
 
-        public HashSet<ILeaf<Vector2>> SearchByBox(Vector2 origin, Vector2 size)
-            => SearchByBox(new Box(origin, size));
+        public HashSet<ILeaf<Vector2>> FindByBox(Vector2 origin, Vector2 size)
+            => FindByBox(new Box(origin, size));
 
-        public HashSet<ILeaf<Vector2>> SearchByBox(Box box)
-            => Find(box, Box.TestIntersection);
+        public HashSet<ILeaf<Vector2>> FindByBox(Box box)
+            => FindBy(box, Box.TestIntersection);
 
 
-        public HashSet<ILeaf<Vector2>> SearchByCircle(Vector2 origin, float radius)
-            => SearchByCircle(new Sphere(origin, radius));
+        public HashSet<ILeaf<Vector2>> FindByCircle(Vector2 origin, float radius)
+            => FindByCircle(new Circle(origin, radius));
 
-        public HashSet<ILeaf<Vector2>> SearchByCircle(Sphere sphere)
-            => Find(sphere, Sphere.TestIntersection);
+        public HashSet<ILeaf<Vector2>> FindByCircle(Circle circle)
+            => FindBy(circle, Circle.TestIntersection);
 
 
         protected internal override Volume<Vector2>[] VolumeSplit(Volume<Vector2> volume)

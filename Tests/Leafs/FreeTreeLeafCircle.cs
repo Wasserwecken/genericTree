@@ -4,11 +4,11 @@ using GenericVector;
 
 namespace Tests
 {
-    public class FreeTreeLeafSphere : ILeaf<Vector>
+    public class FreeTreeLeafCircle : ILeaf<Vector>
     {
         public Sphere boundingSphere;
 
-        public FreeTreeLeafSphere(Vector origin, float radius)
+        public FreeTreeLeafCircle(Vector origin, float radius)
         {
             boundingSphere = new Sphere(origin, radius);
         }

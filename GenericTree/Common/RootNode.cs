@@ -34,7 +34,7 @@ namespace GenericTree.Common
             return result;
         }
 
-        public virtual HashSet<ILeaf<T>> Find<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> intersectionTest)
+        public virtual HashSet<ILeaf<T>> FindBy<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> intersectionTest)
         {
             var result = new HashSet<ILeaf<T>>();
             Find(searchType, result, intersectionTest);

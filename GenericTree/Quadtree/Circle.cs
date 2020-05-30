@@ -3,12 +3,12 @@ using System.Numerics;
 
 namespace GenericTree.Quadtree
 {
-    public struct Sphere
+    public struct Circle
     {
         public readonly Vector2 origin;
         public readonly float radius;
 
-        public Sphere(Vector2 origin, float radius)
+        public Circle(Vector2 origin, float radius)
         {
             this.origin = origin;
             this.radius = radius;
@@ -18,7 +18,7 @@ namespace GenericTree.Quadtree
         public bool TestIntersection(Volume<Vector2> volume)
             => TestIntersection(origin, radius, volume);
 
-        public static bool TestIntersection(Sphere sphere, Volume<Vector2> volume)
+        public static bool TestIntersection(Circle sphere, Volume<Vector2> volume)
             => TestIntersection(sphere.origin, sphere.radius, volume);
 
         public static bool TestIntersection(Vector2 origin, float radius, Volume<Vector2> volume)
