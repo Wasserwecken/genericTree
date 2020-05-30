@@ -40,43 +40,12 @@ namespace GenericTree
             return result;
         }
 
-        public virtual HashSet<ILeaf<T>> ListLeafs(int minDepth = 0, int maxDepth = 0)
-        {
-            var result = new HashSet<ILeaf<T>>();
-            ListLeafs(result, minDepth, maxDepth);
-            return result;
-        }
-
-        public virtual void ListLeafs(HashSet<ILeaf<T>> result, int minDepth = 0, int maxDepth = 0)
-            => rootNode.ListLeafs(result, minDepth, maxDepth);
-        
-        public virtual List<Node<T>> ListNodes(int minDepth = 0, int maxDepth = 0)
-        {
-            var result = new List<Node<T>>();
-            ListNodes(result, minDepth, maxDepth);
-            return result;
-        }
-
-        public virtual void ListNodes(List<Node<T>> result, int minDepth = 0, int maxDepth = 0)
-            => rootNode.ListNodes(result, minDepth, maxDepth);
-
-        public virtual List<Volume<T>> ListVolumes(int minDepth = 0, int maxDepth = 0)
-        {
-            var result = new List<Volume<T>>();
-            ListVolumes(result, minDepth, maxDepth);
-            return result;
-        }
-
-        public virtual void ListVolumes(List<Volume<T>> result, int minDepth = 0, int maxDepth = 0)
-            => rootNode.ListVolumes(result, minDepth, maxDepth);
-
         public virtual HashSet<ILeaf<T>> Find<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> intersectionTest)
         {
             var result = new HashSet<ILeaf<T>>();
             rootNode.Find(searchType, result, intersectionTest);
             return result;
         }
-
 
         internal virtual Node<T> ProvideNode()
         {
