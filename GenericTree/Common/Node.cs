@@ -29,7 +29,10 @@ namespace GenericTree.Common
 
 
         protected virtual Node<T> ProvideNode()
-            => unusedNodes.Count > 0 ? unusedNodes.Pop() : new Node<T>();
+            => unusedNodes.Count > 0 ? unusedNodes.Pop() : CreateNodeInstance();
+
+        protected virtual Node<T> CreateNodeInstance()
+            => new Node<T>();
 
         protected virtual Node<T> SetContext(
             Volume<T> volume,
