@@ -1,172 +1,187 @@
 # genericTree
-This project is a private case study about abstracting the quad and octree process, to enable a generic leaf bounding boxes and a dimensional and position type lose implementation.
+Case study about seperating quad and octree logic for generic bounding boxes, position types and dimensions.
 
 
 ## Features
-- Presets for a standard octree and quadtree
-- Supports generic types for position and size
-- Supports any bounding box for leafs
-- Can be extended into any dimension
+- Presets - Octree, Quadtree, TreeTree
+- Supports generic position types (e.g. Vector4)
+- Supports any bounding box
+- Works in any dimension
 
 
-### Not included
-- No presets for ray or complex intersections
-- No presets for a higher dimensional tree
+### Not implemented
+- Hardware acceleration for FreeTree.
+- Dynamic leafs (moving, resizing)
+- Intersection tests for rays or complex volumes (e.g Mesh, Capsules, OBB).
 
 
-## Preset usage
-The example uses the octree preset. Nevertheless the API and behaviour is exactly the same for the quadtree.   
+## Presets
+Following presets are available:
+- Quadtree *(uses System.Vector2)*
+- Octree *(uses System.Vector3)*
+- FreeTree *(uses Generic.Vector)*
+
+The API of the presets behaves and works identical. Only the positional type differs. The octree preset is used for all examples, but they can be applied on the other presets;
 
 
-### Initialisation
+## Initialisation
+
 ```c#
-// defines the area of the tree
-var startVolume = new Volume<Vector3>(
-        Vector3.Zero,
-        Vector3.One * 10f
-    );
+// settings
+var origin = Vector3.Zero;
+var size = Vector3.One * 5f;
+var maxDepth = 5;
+var maxLeafsPerNode = 5;
 
-// creates a tree instance for working with leafs
-var tree = new Octree(startVolume, 10, 4);
+// initialisation
+var tree = new Octree(origin, size, maxDepth, maxLeafsPerNode);
 ```
-The instance of the tree is used to interact with the structure and the containing leafs. The leaf itself will have no influence or knowledge about the structure.
+
+`origin` and `size` defining the area where the octree will manage. Only items withing this range used.  
+`maxDepth` and `maxLeafsPerNode`are used to control the division of the area of the tree. They will also have an impact on the performance. 
 
 
-### Leafs
-To add an item to the tree structure, it needs to be marked as a leaf by implementing the interface `ILeaf<T>` where `T` is the type of the position data. In case of the octree preset `T` has to be `Vector3`.
+## Leafs
+Leafs are items which can be added to a tree. By implementing the interface `ILeaf<T>`, any class
+can be added to any tree.
+
+> **Important Note**  
+The tree expects static leafs. If a leaf changes it position, it may can not be found or removed anymore, because these functions using the position / boundings for the search. If a leaf needs to be moved or resized, it has to be removed from the tree first, then modified, an finally added again back to the tree.
 
 ```c#
+using System.Numerics;
+
 class Item : ILeaf<Vector3>
 {
-    // position in 3D space of the item 
-    private Vector3 position;
+    // Box is part of the "GenericTree.Octree" namepace
+    // defines the position and size of the item
+    public Box boundingBox;
 
     // method from the interface
-    public bool IntersectionCheck(Volume<Vector3> volume)
+    public bool IntersectionTest(Volume<Vector3> volume)
     {
-        // intersection test from the octree preset can be used
-        return Octree.IntersectionTest.PointBox(position, volume);
+        // tests if the item overlaps with the volume or is inside it
+        // by using the intersection test from the Box type
+        return boundingBox.TestIntersection(volume);
     }
 }
 ```
 
-The method `bool IntersectionCheck(Volume<Vector3> volume)` is called by the tree when the structure is change (usually this will happen on Add or Remove). With this method, the tree will determine how to build and where an element is located in the structure.
+The type of `ILeaf<T>` depends which tree is used. The preset octree is using `System.Vector3` for processing, the leaf has to use the same type.  
 
-Due to outsourcing the intersection test to the leaf, the user can dicide which bouding shape a leaf implements. The example above used a point as bouding shape. Following example will implement a item with a box as bounding shape:
+The interface requires the implementation of the method `bool IntersectionCheck(Volume<Vector3> volume)`. Which is call from the tree, to decide how to build the tree structure on adding and finding leafs for remove
+
+To test for a intersection, following types providing the method `bool TestIntersection(Volume<Vector2> volume)`
+- Point
+- Box
+- Sphere *(Circle for Quadtree)*
+
+If a leaf has a bounding shape other the already implemented one, the intersection test have to be implemented from the user.  
+
+This structure allows to add any leaf with any shape to be part of a tree. It is also possible to add a leaf to multiple trees.
+
+
+## Add & remove
 
 ```c#
-class BoxItem : ILeaf<Vector3>
+public class Example
 {
-    // position and size in the 3D space of the item 
-    private Vector3 position;
-    private Vector3 size;
-
-    // method from the interface
-    public bool IntersectionCheck(Volume<Vector3> volume)
+    public void Foo()
     {
-        // intersection test from the octree preset can be used
-        var box = new Octree.IntersectionType.Box(position, size);
-        return Octree.IntersectionTest.BoxBox(box, volume);
+        // init
+        var tree = new Octree(Vector3.Zero, Vector3.One, 5, 5);
+        var item = new Item();
+
+        // add & remove
+        tree.Add(item);
+        tree.Remove(item);
     }
+}
+
+public class Item : ILeaf<Vector3>
+{
+    public Sphere boundingSphere;
+
+    public bool IntersectionTest(Volume<Vector3> volume)
+        => boundingSphere.TestIntersection(volume);
 }
 ```
 
-If there is a need for a custom bounding shape, only the intersection code has to be written for it. `Volume<T>` is always a AABB Box.
+Leafs can be either removed od added by using the methods on the tree. They both return a boolean as result for the success.  
+They will return false if the leaf
+- has no overlap with tree area
+- has been already added / removed from the tree
+- cannot be found (*for remove only*)
 
 
-### Tree interaction
-
-#### Add
-```c#
-// prepares the tree
-var startVolume = new Volume<Vector3>(Vector3.Zero, Vector3.One * 10f );
-var tree = new Octree(startVolume, 10, 4);
-
-// prepares the items
-var pointItem = new PointItem();
-var boxItem = new BoxItem();
-
-// adds them to the structure
-tree.Add(pointItem);
-tree.Add(boxItem);
-```
-
-For adding leafs, the add method on the tree instance have to be called. A leafs can be in more than in one tree instance. Also all kind of leafs can be added to a tree, there is no constraint, due to the `ILeaf<T>` interface. By adding a new leaf the tree will handle its structural organisation by itself. Adding a leaf again, will return `false`.
-
-
-#### Remove
+## Search
 
 ```c#
-tree.Remove(pointItem);
-```
-
-By removing a leaf, the tree will try to collaps the internal build structure for performance.
-> IMPORTANT! This method is also using the bounding shape of the leaf to locate it in the internal structure. If the position has be changed, the leaf may cannot be removed.
-
-
-#### Update
-
-```c#
-tree.Remove(pointItem);
-pointItem.Move();
-tree.Add(boxItem);
-```
-
-There its no Update() method for the tree structure. To update the position of a leaf, it simply have to be removed, then moved and finnally added again. If the items is moved before the remove, the item may cannot be found.
-
-
-### Search
-The intend of a tree structure is to accelerate the search of items for a given area.
-This can be done with:
-
-```c#            
-var result1 = tree.SearchByPoint(Vector3.Zero);
-var result2 = tree.SearchByBox(Vector3.Zero, Vector3.Zero);
-var result3 = tree.SearchBySphere(Vector3.Zero, 1f);
-```
-
-The search returns a `HashSet<ILeaf<T>>` of all leafs that may have an intersection with the given shape. The search only check for a intersection with the volume and sub-volumes of the tree structure. A final intersection test on the leafs itself have to be done by the user, if needed.
-
-If a search has do be done by a another shape (e.g. a Ray, Capsule, OBB Box), the generic search method have to be used.
-
-```c#
-// search for leafs near by a ray           
-var result = tree.Search(new Ray, RayBoxIntersection);
-
-// intersection method which is used by the search
-// has to be written by the user
-public bool RayBoxIntersection(Ray ray, Volume<Vector3> volume)
+public class Example
 {
-    // interserction code
+    public void Foo()
+    {
+        // init
+        var tree = new Octree(Vector3.Zero, Vector3.One * 10, 5, 5);
+        for(int i = 0; i < 100000; i++)
+            tree.Add(new Item());
+
+        // search
+        var origin = new Vector3(1f, 2f, 4f);
+        var size = new Vector3(4f, 1f, 0.5f);
+        var result = tree.FindByBox(origin, size);
+    }
+}
+```
+The search will return a `HasSet<ILeaf<T>>` will all relevant leafs for the given search area. Like the intersection tests, the presets will offer search methods for searching with a Box, Sphere or Point.
+
+> **Important Note**  
+The search will not test for intersection with the leaf and the search area! The search will return all leafs that are in nodes where the volume of the node has an overlap with the search area. A final intersection test has to be done by the user.
+
+
+### Custom search shape
+
+```c#
+public class Example
+{
+    public void Foo()
+    {
+        // init
+        var tree = new Octree(Vector3.Zero, Vector3.One * 10, 5, 5);
+        for(int i = 0; i < 100000; i++)
+            tree.Add(new Item());
+
+        // search by a ray
+        var result = tree.FindBy(new Ray(), RayBoxIntersection);
+    }
+
+    // custom intersection function for the ray search
+    private static bool RayBoxIntersection(Ray ray, Volume<Vector3> volume)
+    {
+        // intersection logic
+        // ...
+
+        return result;
+    }
+}
+
+// custom search type
+public struct Ray
+{
+    public Vector3 origin;
+    public Vector3 direction;
+    public float length;
+
     // ...
-
-    return true;
 }
 ```
+
+If the search area / shape needs to have a diffrent shape than a box, sphere or point, the generic method `HashSet<ILeaf<T>> FindBy<TSearchType>(TSearchType searchType, Func<TSearchType, Volume<T>, bool> intersectionTest)` has to be used. The method requires a
+- search type
+- intersection test for the search type and `Volume<T>`
+
+If both is given, the tree can be search by any shape. `Volume<T>` is used by the tree for defining its area and node volumes. It behaves as a AABB Box.
+
 
 ## Custom tree
-For custom types other than `System.Numerics.Vector2`, `System.Numerics.Vector3` or a higher dimensional vector, the generic `Tree<T>` class have to be used.
-
-```c#
-public void TreeInit()
-{
-    var startVolume = new Volume<Vector4>(
-            Vector4.Zero,
-            Vector4.One * 10f
-        );
-    var tree4D = new Tree<Vector4>(startVolume, 10, 4, SplitVolume);
-}
-
-// this method is called by the tree if the internal structure have to grow
-public Volume<Vector4>[] SplitVolume(Volume<Vector4> volume)
-{
-    // create new subvolumes based of the given volume
-    // ...
-
-    return newVolumes
-}
-```
-
-THe initialisation of a custom tree is quite the same as using a preset. The generic tree only needs a additional method for splitting volumes. The method is called when a node of the tree contains more leafs than allowed and the maximum depth is not reached. All other functions are used like with the presets, except the search.
-
-For the searching in the generic tree, only the generic search is available (see: Search). I recommend to create a extra class for custom trees which extends the `Tree<T>` (see: octree preset implelemtation source).
+To use other position types other than `System.Numerics.Vector2`, `System.Numerics.Vector3` or `GenericVector.Vector`, the class `RootNode<T>` have to be extended.

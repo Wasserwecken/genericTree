@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace GenericTree.Common
 {
-    [DebuggerDisplay("Leafs: {LeafCount}, Volume: {Volume}")]
+    [DebuggerDisplay("Depth: {Depth}, Leafs: {LeafCount}, Volume: {Volume}")]
     public abstract class RootNode<T> : Node<T>
     {
         public Volume<T> Volume => volume;

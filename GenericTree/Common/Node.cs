@@ -4,12 +4,12 @@ using System.Diagnostics;
 
 namespace GenericTree.Common
 {
-    [DebuggerDisplay("depth: {depth}, Leafs: {LeafCount}, Children: {ChildNodes.Count > 0}, Volume: {Volume}")]
+    [DebuggerDisplay("Level: {level}, Leafs: {leafCount}, Children: {childNodes.Count > 0}")]
     public class Node<T>
     {
         protected Volume<T> volume;
         protected int leafCount;
-        protected int depth;
+        protected int level;
 
         protected int maxDepth;
         protected int maxLeafsPerNode;
@@ -39,7 +39,7 @@ namespace GenericTree.Common
             Func<Volume<T>, Volume<T>[]> volumeSplit)
         {
             this.volume = volume;
-            this.depth = depth;
+            this.level = depth;
             this.maxDepth = maxDepth;
             this.maxLeafsPerNode = maxLeafsPerNode;
             this.volumeSplit = volumeSplit;
@@ -68,7 +68,7 @@ namespace GenericTree.Common
                     success = leafs.Add(leaf);
                     leafCount = leafs.Count;
 
-                    if (leafs.Count > maxLeafsPerNode && depth < maxDepth)
+                    if (leafs.Count > maxLeafsPerNode && level < maxDepth)
                         Extend();
                 }
             }
@@ -143,7 +143,7 @@ namespace GenericTree.Common
         {
             var childVolumes = volumeSplit(volume);
             foreach (var childVolume in childVolumes)
-                childNodes.Add(ProvideNode().SetContext(childVolume, depth + 1, maxDepth, maxLeafsPerNode, volumeSplit));
+                childNodes.Add(ProvideNode().SetContext(childVolume, level + 1, maxDepth, maxLeafsPerNode, volumeSplit));
 
             foreach (var leaf in leafs)
                 AddToChildren(leaf);
@@ -163,7 +163,7 @@ namespace GenericTree.Common
 
         protected virtual int CheckDepth()
         {
-            var result = depth;
+            var result = level;
 
             if (childNodes.Count > 0)
                 foreach (var child in childNodes)
