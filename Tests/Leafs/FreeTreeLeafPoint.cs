@@ -1,5 +1,5 @@
-﻿using GenericTree;
-using GenericTree.Presets;
+﻿using GenericTree.Common;
+using GenericTree.FreeTree;
 using GenericVector;
 
 namespace Tests
@@ -14,8 +14,6 @@ namespace Tests
         }
 
         public bool IntersectionTest(Volume<Vector> volume)
-        {
-            return FreeTree.IntersectionTest.PointBox(position, volume);
-        }
+            => Point.TestIntersection(position, volume);
     }
 }

@@ -1,23 +1,19 @@
-﻿using GenericTree;
-using GenericTree.Presets;
+﻿using GenericTree.Common;
+using GenericTree.FreeTree;
 using GenericVector;
 
 namespace Tests
 {
     public class FreeTreeLeafBox : ILeaf<Vector>
     {
-        public Vector position;
-        public Vector size;
+        public Box boundingBox;
 
-        public FreeTreeLeafBox(Vector position, Vector size)
+        public FreeTreeLeafBox(Vector origin, Vector size)
         {
-            this.position = position;
-            this.size = size;
+            boundingBox = new Box(origin, size);
         }
 
         public bool IntersectionTest(Volume<Vector> volume)
-        {
-            return FreeTree.IntersectionTest.PointBox(position, volume);
-        }
+            => boundingBox.TestIntersection(volume);
     }
 }

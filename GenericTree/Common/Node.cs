@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace GenericTree
+namespace GenericTree.Common
 {
     [DebuggerDisplay("Depth: {Depth}; Leafs: {LeafCount}; Children: {ChildNodes.Count > 0}; Volume: {Volume}")]
     public class Node<T>

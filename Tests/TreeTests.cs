@@ -1,9 +1,5 @@
-﻿using GenericTree;
-using GenericTree.Presets;
-using System;
-using System.Collections.Generic;
+﻿using GenericTree.Common;
 using System.Numerics;
-using System.Text;
 
 namespace Tests
 {

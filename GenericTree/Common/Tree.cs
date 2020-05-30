@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace GenericTree
+namespace GenericTree.Common
 {
     [DebuggerDisplay("LeafCount: {LeafCount}")]
     public abstract class Tree<T>

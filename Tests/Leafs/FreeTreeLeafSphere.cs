@@ -1,23 +1,19 @@
-﻿using GenericTree;
-using GenericTree.Presets;
+﻿using GenericTree.Common;
+using GenericTree.FreeTree;
 using GenericVector;
 
 namespace Tests
 {
     public class FreeTreeLeafSphere : ILeaf<Vector>
     {
-        public Vector position;
-        public float radius;
+        public Sphere boundingSphere;
 
-        public FreeTreeLeafSphere(Vector position, float radius)
+        public FreeTreeLeafSphere(Vector origin, float radius)
         {
-            this.position = position;
-            this.radius = radius;
+            boundingSphere = new Sphere(origin, radius);
         }
 
         public bool IntersectionTest(Volume<Vector> volume)
-        {
-            return FreeTree.IntersectionTest.PointBox(position, volume);
-        }
+            => boundingSphere.TestIntersection(volume);
     }
 }

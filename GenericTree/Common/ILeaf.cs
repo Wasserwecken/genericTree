@@ -1,4 +1,4 @@
-﻿namespace GenericTree
+﻿namespace GenericTree.Common
 {
     public interface ILeaf<T>
     {
