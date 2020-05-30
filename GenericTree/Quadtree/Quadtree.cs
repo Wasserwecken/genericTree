@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace GenericTree.Quadtree
 {
-    public class Quadtree : Tree<Vector2>
+    public class Quadtree : RootNode<Vector2>
     {
         public Quadtree(Vector2 origin, Vector2 size, int maxDepth, int maxLeafsPerNode)
             : this(new Volume<Vector2>(origin, size), maxDepth, maxLeafsPerNode) { }

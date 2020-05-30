@@ -4,7 +4,7 @@ using System;
 
 namespace GenericTree.FreeTree
 {
-    public class FreeTree : Tree<Vector>
+    public class FreeTree : RootNode<Vector>
     {
         public FreeTree(Vector origin, Vector size, int maxDepth, int maxLeafsPerNode)
             : this(new Volume<Vector>(origin, size), maxDepth, maxLeafsPerNode) { }

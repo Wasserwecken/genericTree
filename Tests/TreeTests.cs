@@ -1,11 +1,22 @@
 ﻿using GenericTree.Common;
+using NUnit.Framework;
 using System.Numerics;
 
 namespace Tests
 {
     public class TreeTests
     {
-        public class TestTree : Tree<Vector2>
+        private TestTree tree;
+
+        [SetUp]
+        public void Setup()
+        {
+            tree = new TestTree();
+
+        }
+
+
+        public class TestTree : RootNode<Vector2>
         {
             public TestTree() : base(new Vector2(0f, 0f), new Vector2(4f, 4f), 5, 1) { }
 

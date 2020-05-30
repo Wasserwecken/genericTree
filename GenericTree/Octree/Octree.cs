@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace GenericTree.Octree
 {
-    public class Octree : Tree<Vector3>
+    public class Octree : RootNode<Vector3>
     {
         public Octree(Vector3 origin, Vector3 size, int maxDepth, int maxLeafsPerNode)
             : this(new Volume<Vector3>(origin, size), maxDepth, maxLeafsPerNode) { }
