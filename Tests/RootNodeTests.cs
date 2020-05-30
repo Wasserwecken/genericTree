@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Tests
 {
-    public class TreeTests
+    public class RootNodeTests
     {
         private TestTree tree;
 
