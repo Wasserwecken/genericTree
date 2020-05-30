@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\genericVector\GenericVector\GenericVector.csproj" />
+    <ProjectReference Include="..\lib\genericVector\GenericVector\GenericVector.csproj" />
   </ItemGroup>
 
 </Project>
