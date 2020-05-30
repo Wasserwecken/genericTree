@@ -10,10 +10,8 @@ namespace GenericTree.Common
         public readonly int maxDepth;
         public readonly int maxLeafsPerNode;
         public Volume<T> TreeVolume => rootNode.Volume;
-
         public int LeafCount => rootNode.LeafCount;
 
-        protected readonly Stack<Node<T>> unusedNodes;
         protected readonly Node<T> rootNode;
 
 
@@ -25,7 +23,6 @@ namespace GenericTree.Common
             this.maxDepth = maxDepth;
             this.maxLeafsPerNode = maxLeafsPerNode;
 
-            unusedNodes = new Stack<Node<T>>();
             rootNode = ProvideNode().SetContext(startVolume, 0);
         }
 
@@ -45,20 +42,6 @@ namespace GenericTree.Common
             var result = new HashSet<ILeaf<T>>();
             rootNode.Find(searchType, result, intersectionTest);
             return result;
-        }
-
-
-        public virtual Node<T> ProvideNode()
-        {
-            if (unusedNodes.Count > 0)
-                return unusedNodes.Pop();
-            else
-                return new Node<T>(this);
-        }
-
-        public virtual void ReturnNode(Node<T> node)
-        {
-            unusedNodes.Push(node.Reset());
         }
 
         protected internal abstract Volume<T>[] VolumeSplit(Volume<T> volume);

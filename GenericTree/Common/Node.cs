@@ -15,34 +15,20 @@ namespace GenericTree.Common
         protected readonly HashSet<ILeaf<T>> leafs;
         protected readonly List<Node<T>> childNodes;
         protected Volume<T> volume;
+        
+        protected static readonly Stack<Node<T>> unusedNodes;
+
 
         public Node(Tree<T> tree)
         {
             Tree = tree;
+            LeafCount = 0;
+            Depth = 0;
 
             childNodes = new List<Node<T>>();
             leafs = new HashSet<ILeaf<T>>();
         }
 
-        public virtual Node<T> SetContext(Volume<T> volume, int level)
-        {
-            Depth = level;
-            this.volume = volume;
-
-            childNodes.Clear();
-            leafs.Clear();
-
-            return this;
-        }
-
-        public virtual Node<T> Reset()
-        {
-            childNodes.Clear();
-            leafs.Clear();
-            LeafCount = 0;
-
-            return this;
-        }
 
         public virtual bool Add(ILeaf<T> leaf)
         {
@@ -130,14 +116,14 @@ namespace GenericTree.Common
                 foreach (var leaf in leafs)
                     loseLeafs.Add(leaf);
 
-            Tree.ReturnNode(this);
+            unusedNodes.Push(Reset());
         }
 
         protected virtual void Split()
         {
             var childVolumes = Tree.VolumeSplit(Volume);
             foreach (var childVolume in childVolumes)
-                childNodes.Add(Tree.ProvideNode().SetContext(childVolume, Depth + 1));
+                childNodes.Add(ProvideNode().SetContext(childVolume, Depth + 1));
 
             foreach (var leaf in leafs)
                 AddToChildren(leaf);
@@ -153,6 +139,31 @@ namespace GenericTree.Common
                 success |= child.Add(leaf);
 
             return success;
+        }
+
+
+        protected virtual Node<T> ProvideNode()
+            => unusedNodes.Count > 0 ? unusedNodes.Pop() : new Node<T>(Tree);
+
+        protected virtual Node<T> SetContext(Volume<T> volume, int level)
+        {
+            Depth = level;
+            this.volume = volume;
+
+            LeafCount = 0;
+            childNodes.Clear();
+            leafs.Clear();
+
+            return this;
+        }
+
+        protected virtual Node<T> Reset()
+        {
+            LeafCount = 0;
+            childNodes.Clear();
+            leafs.Clear();
+
+            return this;
         }
     }
 }
