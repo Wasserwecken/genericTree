@@ -31,18 +31,7 @@ namespace GenericTree.Quadtree
             => FindBy(circle, Circle.TestIntersection);
 
 
-        protected internal override Volume<Vector2>[] VolumeSplit(Volume<Vector2> volume)
-        {
-            var splitSize = volume.size / 2f;
-            var offset = splitSize / 2f;
-
-            return new Volume<Vector2>[4]
-            {
-                new Volume<Vector2>(volume.origin + offset * new Vector2(1, -1), splitSize),
-                new Volume<Vector2>(volume.origin + offset * new Vector2(1, 1), splitSize),
-                new Volume<Vector2>(volume.origin + offset * new Vector2(-1, -1), splitSize),
-                new Volume<Vector2>(volume.origin + offset * new Vector2(-1, 1), splitSize),
-            };
-        }
+        protected internal override Volume<Vector2>[] SplitVolume(Volume<Vector2> volume)
+            => VolumeSplitter.SplitUniform(volume);
     }
 }

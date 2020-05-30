@@ -31,22 +31,7 @@ namespace GenericTree.Octree
             => FindBy(sphere, Sphere.TestIntersection);
 
 
-        protected internal override Volume<Vector3>[] VolumeSplit(Volume<Vector3> volume)
-        {
-            var splitSize = volume.size / 2f;
-            var offset = splitSize / 2f;
-
-            return new Volume<Vector3>[8]
-            {
-                new Volume<Vector3>(volume.origin + offset * new Vector3(1, 1, -1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(1, 1, 1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(1, -1, -1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(1, -1, 1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, 1, -1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, 1, 1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, -1, -1), splitSize),
-                new Volume<Vector3>(volume.origin + offset * new Vector3(-1, -1, 1), splitSize)
-            };
-        }
+        protected internal override Volume<Vector3>[] SplitVolume(Volume<Vector3> volume)
+            => VolumeSplitter.SplitUniform(volume);
     }
 }

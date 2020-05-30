@@ -69,7 +69,7 @@ namespace GenericTree.Common
                     leafCount = leafs.Count;
 
                     if (leafs.Count > maxLeafsPerNode && depth < maxDepth)
-                        Split();
+                        Extend();
                 }
             }
 
@@ -141,7 +141,7 @@ namespace GenericTree.Common
             unusedNodes.Push(this);
         }
 
-        protected virtual void Split()
+        protected virtual void Extend()
         {
             var childVolumes = volumeSplit(volume);
             foreach (var childVolume in childVolumes)

@@ -22,7 +22,7 @@ namespace GenericTree.Common
             if (maxLeafsPerNode <= 0)
                 throw new ArgumentException("At least one leaf per node is required");
 
-            SetContext(startVolume, 0, maxDepth, maxLeafsPerNode, VolumeSplit);
+            SetContext(startVolume, 0, maxDepth, maxLeafsPerNode, SplitVolume);
         }
 
 
@@ -43,6 +43,6 @@ namespace GenericTree.Common
         }
 
 
-        protected internal abstract Volume<T>[] VolumeSplit(Volume<T> volume);
+        protected internal abstract Volume<T>[] SplitVolume(Volume<T> volume);
     }
 }
