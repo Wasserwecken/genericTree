@@ -1,6 +1,5 @@
 ﻿using GenericTree.Common;
 using GenericVector;
-using System;
 
 namespace GenericTree.FreeTree
 {

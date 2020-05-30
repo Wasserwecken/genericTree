@@ -1,5 +1,4 @@
 ﻿using GenericTree.Common;
-using System;
 using System.Numerics;
 
 namespace GenericTree.Quadtree

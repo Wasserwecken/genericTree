@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32.SafeHandles;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace GenericTree.Common
 {
