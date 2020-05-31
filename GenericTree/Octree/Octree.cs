@@ -4,13 +4,10 @@ using System.Numerics;
 
 namespace GenericTree.Octree
 {
-    public class Octree : RootNode<Vector3>
+    public class Octree : RootBase<Vector3, Node<Vector3>>
     {
         public Octree(Vector3 origin, Vector3 size, int maxDepth, int maxLeafsPerNode)
-            : this(new Volume<Vector3>(origin, size), maxDepth, maxLeafsPerNode) { }
-
-        public Octree(Volume<Vector3> startVolume, int maxDepth, int maxLeafsPerNode)
-            : base(startVolume, maxDepth, maxLeafsPerNode) { }
+            : base(origin, size, maxDepth, maxLeafsPerNode) { }
 
 
         public HashSet<ILeaf<Vector3>> FindByPoint(Vector3 point)
@@ -31,7 +28,7 @@ namespace GenericTree.Octree
             => FindBy(sphere, Sphere.TestIntersection);
 
 
-        protected internal override Volume<Vector3>[] SplitVolume(Volume<Vector3> volume)
-            => VolumeSplitter.SplitUniform(volume);
+        protected override Node<Vector3> CreateRootNode()
+            => new Node<Vector3>(Volume, 0, MaxDepth, MaxLeafsPerNode, VolumeSplitter.SplitUniform);
     }
 }

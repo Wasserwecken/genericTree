@@ -8,12 +8,12 @@ namespace Tests
     [TestFixture]
     public class RootNodeTests
     {
-        private TestTree tree;
+        private FreeTree tree;
 
         [SetUp]
         public void Setup()
         {
-            tree = new TestTree();
+            tree = new FreeTree(new Vector(0f, 0f), new Vector(5f, 5f), 2, 2);
         }
 
         [Test]
@@ -89,12 +89,6 @@ namespace Tests
             Assert.AreEqual(2, result.Count);
             Assert.IsTrue(result.Contains(point));
             Assert.IsTrue(result.Contains(box));
-        }
-
-
-        public class TestTree : FreeTree
-        {
-            public TestTree() : base(new Vector(0f, 0f), new Vector(4f, 4f), 2, 2) { }
         }
     }
 }

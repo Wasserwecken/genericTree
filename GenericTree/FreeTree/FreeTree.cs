@@ -4,13 +4,10 @@ using System.Collections.Generic;
 
 namespace GenericTree.FreeTree
 {
-    public class FreeTree : RootNode<Vector>
+    public class FreeTree : RootBase<Vector, Node<Vector>>
     {
         public FreeTree(Vector origin, Vector size, int maxDepth, int maxLeafsPerNode)
-            : this(new Volume<Vector>(origin, size), maxDepth, maxLeafsPerNode) { }
-
-        public FreeTree(Volume<Vector> startVolume, int maxDepth, int maxLeafsPerNode)
-            : base(startVolume, maxDepth, maxLeafsPerNode) { }
+            : base(origin, size, maxDepth, maxLeafsPerNode) { }
 
 
         public HashSet<ILeaf<Vector>> FindByPoint(Vector point)
@@ -31,7 +28,7 @@ namespace GenericTree.FreeTree
             => FindBy(sphere, Sphere.TestIntersection);
 
 
-        protected internal override Volume<Vector>[] SplitVolume(Volume<Vector> volume)
-            => VolumeSplitter.SplitUniform(volume);
+        protected override Node<Vector> CreateRootNode()
+            => new Node<Vector>(Volume, 0, MaxDepth, MaxLeafsPerNode, VolumeSplitter.SplitUniform);
     }
 }

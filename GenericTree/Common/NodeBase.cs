@@ -4,12 +4,12 @@ using System.Diagnostics;
 
 namespace GenericTree.Common
 {
-    [DebuggerDisplay("Level: {level}, Leafs: {leafCount}, Children: {childNodes.Count > 0}")]
-    public abstract class NodeBase<T, TNode> where TNode : NodeBase<T, TNode>
+    [DebuggerDisplay("Level: {Level}, Leafs: {LeafCount}, Children: {childNodes.Count > 0}")]
+    public abstract class NodeBase<T, TNode> where TNode : NodeBase<T, TNode>, new()
     {
-        protected Volume<T> volume;
-        protected int leafCount;
-        protected int level;
+        public Volume<T> Volume { get; private set; }
+        public int LeafCount { get; private set; }
+        public int Level { get; private set; }
 
         protected int maxDepth;
         protected int maxLeafsPerNode;
@@ -27,30 +27,15 @@ namespace GenericTree.Common
             leafs = new HashSet<ILeaf<T>>();
         }
 
-
-        protected virtual TNode ProvideNode()
-            => unusedNodes.Count > 0 ? unusedNodes.Pop() : CreateNodeInstance();
-
-        protected abstract TNode CreateNodeInstance();
-
-        protected virtual TNode SetContext(
+        public NodeBase(
             Volume<T> volume,
             int depth,
             int maxDepth,
             int maxLeafsPerNode,
             Func<Volume<T>, Volume<T>[]> volumeSplit)
+            : this()
         {
-            this.volume = volume;
-            this.level = depth;
-            this.maxDepth = maxDepth;
-            this.maxLeafsPerNode = maxLeafsPerNode;
-            this.volumeSplit = volumeSplit;
-
-            leafCount = 0;
-            childNodes.Clear();
-            leafs.Clear();
-
-            return (TNode)this;
+            SetContext(volume, depth, maxDepth, maxLeafsPerNode, volumeSplit);
         }
 
 
@@ -58,19 +43,19 @@ namespace GenericTree.Common
         {
             var success = false;
 
-            if (leaf.IntersectionTest(volume))
+            if (leaf.IntersectionTest(Volume))
             {
                 if (childNodes.Count > 0)
                 {
                     success = AddToChildren(leaf);
-                    if (success) leafCount++;
+                    if (success) LeafCount++;
                 }
                 else
                 {
                     success = leafs.Add(leaf);
-                    leafCount = leafs.Count;
+                    LeafCount = leafs.Count;
 
-                    if (leafs.Count > maxLeafsPerNode && level < maxDepth)
+                    if (leafs.Count > maxLeafsPerNode && Level < maxDepth)
                         Extend();
                 }
             }
@@ -82,18 +67,18 @@ namespace GenericTree.Common
         {
             var success = false;
 
-            if (leaf.IntersectionTest(volume))
+            if (leaf.IntersectionTest(Volume))
             {
                 if (childNodes.Count > 0)
                 {
                     foreach (var child in childNodes)
                         success |= child.Remove(leaf);
-                    if (success) leafCount--;
+                    if (success) LeafCount--;
                 }
                 else
                 {
                     success = leafs.Remove(leaf);
-                    leafCount = leafs.Count;
+                    LeafCount = leafs.Count;
                 }
             }
 
@@ -102,7 +87,7 @@ namespace GenericTree.Common
 
         public virtual void FindBy<TSearchType>(TSearchType searchType, HashSet<ILeaf<T>> resultList, Func<TSearchType, Volume<T>, bool> intersectionTest)
         {
-            if (intersectionTest(searchType, volume))
+            if (intersectionTest(searchType, Volume))
                 if (childNodes.Count > 0)
                     foreach (var child in childNodes)
                         child.FindBy(searchType, resultList, intersectionTest);
@@ -111,12 +96,69 @@ namespace GenericTree.Common
                         resultList.Add(leaf);
         }
 
+        public virtual int CheckMaxDepth()
+        {
+            var result = Level;
 
-        protected virtual void TryMerge()
+            foreach (var child in childNodes)
+                result = Math.Max(result, child.CheckMaxDepth());
+
+            return result;
+        }
+
+        public virtual void ListLeafs(HashSet<ILeaf<T>> result)
+        {
+            foreach (var leaf in leafs)
+                result.Add(leaf);
+
+            foreach (var child in childNodes)
+                child.ListLeafs(result);
+        }
+
+        public virtual void ListVolumes(List<Volume<T>> result)
+        {
+            result.Add(Volume);
+
+            foreach (var child in childNodes)
+                child.ListVolumes(result);
+        }
+
+
+        protected virtual TNode ProvideNode()
+            => unusedNodes.Count > 0 ? unusedNodes.Pop() : new TNode();
+
+        protected virtual TNode SetContext(
+            Volume<T> volume,
+            int level,
+            int maxDepth,
+            int maxLeafsPerNode,
+            Func<Volume<T>, Volume<T>[]> volumeSplit)
+        {
+            if (maxDepth < 0)
+                throw new ArgumentException("Negative depth is invalid");
+
+            if (maxLeafsPerNode <= 0)
+                throw new ArgumentException("At least one leaf per node have to be allowed");
+
+            this.Volume = volume;
+            this.Level = level;
+            this.maxDepth = maxDepth;
+            this.maxLeafsPerNode = maxLeafsPerNode;
+            this.volumeSplit = volumeSplit;
+
+            LeafCount = 0;
+            childNodes.Clear();
+            leafs.Clear();
+
+            return (TNode)this;
+        }
+
+
+        public virtual void TryMerge()
         {
             if (childNodes.Count > 0)
             {
-                if (leafCount <= maxLeafsPerNode)
+                if (LeafCount <= maxLeafsPerNode)
                 {
                     foreach (var child in childNodes)
                         child.Disolve(leafs);
@@ -143,9 +185,9 @@ namespace GenericTree.Common
 
         protected virtual void Extend()
         {
-            var childVolumes = volumeSplit(volume);
+            var childVolumes = volumeSplit(Volume);
             foreach (var childVolume in childVolumes)
-                childNodes.Add(ProvideNode().SetContext(childVolume, level + 1, maxDepth, maxLeafsPerNode, volumeSplit));
+                childNodes.Add(ProvideNode().SetContext(childVolume, Level + 1, maxDepth, maxLeafsPerNode, volumeSplit));
 
             foreach (var leaf in leafs)
                 AddToChildren(leaf);
@@ -161,17 +203,6 @@ namespace GenericTree.Common
                 success |= child.Add(leaf);
 
             return success;
-        }
-
-        protected virtual int CheckDepth()
-        {
-            var result = level;
-
-            if (childNodes.Count > 0)
-                foreach (var child in childNodes)
-                    result = Math.Max(result, child.CheckDepth());
-
-            return result;
         }
     }
 }
